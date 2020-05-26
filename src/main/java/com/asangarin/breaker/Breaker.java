@@ -19,9 +19,7 @@ package com.asangarin.breaker;
 import com.asangarin.breaker.command.BreakerCommand;
 import com.asangarin.breaker.command.BreakerTabComplete;
 import com.asangarin.breaker.core.BreakingCore;
-import com.asangarin.breaker.legacy.DefaultManager;
-import com.asangarin.breaker.legacy.LegacyManager;
-import com.asangarin.breaker.legacy.VersionWrapper;
+import com.asangarin.breaker.manager.LegacyManager;
 import com.asangarin.breaker.manager.ConfigManager;
 import com.asangarin.breaker.manager.Database;
 import com.asangarin.breaker.manager.StatesManager;
@@ -29,20 +27,16 @@ import com.asangarin.breaker.manager.SystemManager;
 import com.asangarin.breaker.utility.NMSHandler;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
-public class Breaker
-extends JavaPlugin {
-    private static final Pattern DOT = Pattern.compile(".", Pattern.LITERAL);
+public class Breaker extends JavaPlugin {
     public static Breaker plugin;
     Settings settings;
     public ProtocolManager protocol;
@@ -50,7 +44,7 @@ extends JavaPlugin {
     public Database database;
     public SystemManager system;
     public NMSHandler nms;
-    public VersionWrapper legacy;
+    public LegacyManager legacy;
     private ConfigManager config;
     public BreakingCore core;
 
@@ -69,8 +63,8 @@ extends JavaPlugin {
             if (sampleFile2.exists()) {
                 return;
             }
-            final InputStream input1 = ((Object) this).getClass().getResourceAsStream("/default/blockconfigs/STONE_BLOCKS.yml");
-            final InputStream input2 = ((Object) this).getClass().getResourceAsStream("/default/blockconfigs/WOODEN_BLOCKS.yml");
+            final InputStream input1 = getClass().getResourceAsStream("/default/blockconfigs/STONE_BLOCKS.yml");
+            final InputStream input2 = getClass().getResourceAsStream("/default/blockconfigs/WOODEN_BLOCKS.yml");
             final String outputFile1 = sampleFile1.getAbsolutePath();
             final String outputFile2 = sampleFile2.getAbsolutePath();
             try {
@@ -86,15 +80,8 @@ extends JavaPlugin {
         getCommand("breaker").setExecutor(new BreakerCommand());
         getCommand("breaker").setTabCompleter(new BreakerTabComplete());
         protocol = ProtocolLibrary.getProtocolManager();
-        try {
-            nms = (NMSHandler)Class.forName("com.asangarin.breaker.nms.NMSHandler_" + DOT.matcher(Bukkit.getServer().getClass().getPackage().getName()).replaceAll(Matcher.quoteReplacement(",")).split(",")[3].substring(1)).newInstance();
-        }
-        catch (final ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            Breaker.warn("Couldn't find NMS class for version: '" + DOT.matcher(Bukkit.getServer().getClass().getPackage().getName()).replaceAll(Matcher.quoteReplacement(",")).split(",")[3].substring(1) + "'!");
-            Breaker.warn("Are you using a supported version of Minecraft?");
-            Bukkit.getPluginManager().disablePlugin(plugin);
-        }
-        legacy   = nms.getVersion().equals("1.12_R1") ? new LegacyManager() : new DefaultManager();
+        nms = new NMSHandler();
+        legacy   = new LegacyManager();
         states   = new StatesManager();
         database = new Database();
         system   = new SystemManager();

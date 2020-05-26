@@ -23,9 +23,8 @@ implements CommandExecutor {
     private final String pluginPrefix = ChatColor.translateAlternateColorCodes('&', "&6[&4Breaker&6] ");
 
     public boolean onCommand(final CommandSender sender, final Command cmd, final String commandLabel, final String[] args) {
-        final Object player;
-        if (sender instanceof Player && !(player = sender).hasPermission("breaker.admin")) {
-            player.sendMessage(ChatColor.RED + "You do not have permission to run this command.");
+        if (sender instanceof Player && !sender.hasPermission("breaker.admin")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to run this command.");
             return true;
         }
         if (args == null || args.length == 0) {
