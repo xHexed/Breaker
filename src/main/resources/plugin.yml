@@ -1,0 +1,14 @@
+name: BreakerLite
+main: com.asangarin.breaker.Breaker
+version: 1.0
+api-version: 1.13
+depend: [ProtocolLib]
+commands:
+  breaker:
+    usage: /breaker
+    description: Master command for all Breaker commands.
+    permission: breaker.admin
+permissions:
+  breaker.admin:
+    description: Allows usage of all Breaker commands.
+    default: op

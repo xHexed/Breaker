@@ -1,0 +1,21 @@
+#The material to modify.
+STONE:
+  #The block break speed (in ticks) if no state is present.
+  max-hardness: 50
+  #The minimum block break speed (in ticks). Will not be overwritten by states.
+  min-hardness: 10
+  #The states of the block.
+  #Depending on the state a blocks break speed may change.
+  #If multiple states are present the LOWEST number will be selected
+  states:
+    #The name of the state is user-defined. Can be anything
+    randomstatename:
+      #The type of the state.
+      #Note that the other args of the requirement depend on the type.
+      #Not all types support all arguments.
+      #For a full list, please see the wiki.
+      type: tool
+      #The item that will trigger this state of the block.
+      material: WOODEN_PICKAXE
+      #The value (ticks) to remove from the block hardness when this state is active
+      hardness: 20
