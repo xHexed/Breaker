@@ -1,32 +1,12 @@
-/*
- * Decompiled with CFR 0.145.
- * 
- * Could not load the following classes:
- *  com.comphenix.protocol.ProtocolLibrary
- *  com.comphenix.protocol.ProtocolManager
- *  org.bukkit.Bukkit
- *  org.bukkit.command.CommandExecutor
- *  org.bukkit.command.PluginCommand
- *  org.bukkit.command.TabCompleter
- *  org.bukkit.configuration.ConfigurationSection
- *  org.bukkit.configuration.file.FileConfiguration
- *  org.bukkit.event.Listener
- *  org.bukkit.plugin.Plugin
- *  org.bukkit.plugin.java.JavaPlugin
- */
-package com.asangarin.breaker;
+package com.github.xhexed.breaker;
 
-import com.asangarin.breaker.command.BreakerCommand;
-import com.asangarin.breaker.command.BreakerTabComplete;
-import com.asangarin.breaker.core.BreakingCore;
-import com.asangarin.breaker.manager.LegacyManager;
-import com.asangarin.breaker.manager.ConfigManager;
-import com.asangarin.breaker.manager.Database;
-import com.asangarin.breaker.manager.StatesManager;
-import com.asangarin.breaker.manager.SystemManager;
-import com.asangarin.breaker.utility.NMSHandler;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.github.xhexed.breaker.core.BreakingCore;
+import com.github.xhexed.breaker.manager.ConfigManager;
+import com.github.xhexed.breaker.manager.Database;
+import com.github.xhexed.breaker.manager.StatesManager;
+import com.github.xhexed.breaker.manager.SystemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,8 +23,6 @@ public class Breaker extends JavaPlugin {
     public StatesManager states;
     public Database database;
     public SystemManager system;
-    public NMSHandler nms;
-    public LegacyManager legacy;
     private ConfigManager config;
     public BreakingCore core;
 
@@ -78,10 +56,8 @@ public class Breaker extends JavaPlugin {
         saveDefaultConfig();
         settings = new Settings(getConfig().getConfigurationSection("settings"));
         getCommand("breaker").setExecutor(new BreakerCommand());
-        getCommand("breaker").setTabCompleter(new BreakerTabComplete());
+        getCommand("breaker").setTabCompleter(new BreakerCommand());
         protocol = ProtocolLibrary.getProtocolManager();
-        nms = new NMSHandler();
-        legacy   = new LegacyManager();
         states   = new StatesManager();
         database = new Database();
         system   = new SystemManager();
@@ -91,7 +67,7 @@ public class Breaker extends JavaPlugin {
         onReload();
     }
 
-    public void onReload() {
+    void onReload() {
         reloadConfig();
         config.reload();
     }

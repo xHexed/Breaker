@@ -1,12 +1,4 @@
-/*
- * Decompiled with CFR 0.145.
- * 
- * Could not load the following classes:
- *  org.bukkit.block.Block
- *  org.bukkit.configuration.ConfigurationSection
- *  org.bukkit.entity.Player
- */
-package com.asangarin.breaker.utility;
+package com.github.xhexed.breaker.utility;
 
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;

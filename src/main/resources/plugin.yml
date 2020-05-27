@@ -1,7 +1,6 @@
-name: BreakerLite
-main: com.asangarin.breaker.Breaker
-version: 1.0
-api-version: 1.13
+name: Breaker
+main: Breaker
+version: "1.0"
 depend: [ProtocolLib]
 commands:
   breaker:

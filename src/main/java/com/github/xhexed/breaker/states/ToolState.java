@@ -1,18 +1,8 @@
-/*
- * Decompiled with CFR 0.145.
- * 
- * Could not load the following classes:
- *  org.bukkit.Material
- *  org.bukkit.configuration.ConfigurationSection
- *  org.bukkit.entity.Player
- *  org.bukkit.inventory.ItemStack
- *  org.bukkit.inventory.PlayerInventory
- */
-package com.asangarin.breaker.states;
+package com.github.xhexed.breaker.states;
 
-import com.asangarin.breaker.Breaker;
-import com.asangarin.breaker.core.BreakingBlock;
-import com.asangarin.breaker.utility.BreakState;
+import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.core.BreakingBlock;
+import com.github.xhexed.breaker.utility.BreakState;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 

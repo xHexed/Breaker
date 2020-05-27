@@ -1,34 +1,7 @@
-/*
- * Decompiled with CFR 0.145.
- * 
- * Could not load the following classes:
- *  com.comphenix.protocol.AsynchronousManager
- *  com.comphenix.protocol.PacketType
- *  com.comphenix.protocol.PacketType$Play
- *  com.comphenix.protocol.PacketType$Play$Client
- *  com.comphenix.protocol.ProtocolManager
- *  com.comphenix.protocol.async.AsyncListenerHandler
- *  com.comphenix.protocol.events.ListenerPriority
- *  com.comphenix.protocol.events.PacketAdapter
- *  com.comphenix.protocol.events.PacketContainer
- *  com.comphenix.protocol.events.PacketEvent
- *  com.comphenix.protocol.events.PacketListener
- *  com.comphenix.protocol.reflect.StructureModifier
- *  com.comphenix.protocol.wrappers.BlockPosition
- *  com.comphenix.protocol.wrappers.EnumWrappers
- *  com.comphenix.protocol.wrappers.EnumWrappers$PlayerDigType
- *  org.bukkit.GameMode
- *  org.bukkit.Material
- *  org.bukkit.World
- *  org.bukkit.block.Block
- *  org.bukkit.entity.Player
- *  org.bukkit.plugin.Plugin
- *  org.bukkit.potion.PotionEffectType
- */
-package com.asangarin.breaker.core;
+package com.github.xhexed.breaker.core;
 
-import com.asangarin.breaker.Breaker;
-import com.asangarin.breaker.utility.BreakerSystem;
+import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.utility.BreakerSystem;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -36,6 +9,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -51,7 +25,7 @@ public class BreakingCore {
     private List<BreakerSystem> systems;
 
     public BreakingCore() {
-        excludedMaterials = Breaker.plugin.nms.getExlcudedBlocks();
+        excludedMaterials = NMSHandler.getExlcudedBlocks();
         systems           = new ArrayList<>();
         for (final Class breakerSystems : Breaker.plugin.system.registered()) {
             try {
@@ -62,8 +36,7 @@ public class BreakingCore {
             }
         }
         systems = systems.stream().sorted(Comparator.comparingInt(BreakerSystem::priority)).collect(Collectors.toList());
-        Breaker.plugin.protocol.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(Breaker.plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG){
-
+        Breaker.plugin.protocol.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(Breaker.plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG) {
             public void onPacketReceiving(final PacketEvent event) {
                 final PacketContainer packet = event.getPacket();
                 final EnumWrappers.PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
@@ -117,8 +90,8 @@ public class BreakingCore {
         cachedBlocks.remove(BreakingCore.getBlockEntityId(block)).cancel();
     }
 
-    static int getBlockEntityId(final Block block) {
-        return (block.getX() & 4095) << 20 | (block.getZ() & 4095) << 8 | block.getY() & 255;
+    public static int getBlockEntityId(final Block block) {
+        return (block.getX() & 0xFFF) << 20 | (block.getZ() & 0xFFF) << 8 | block.getY() & 0xFF;
     }
 
     public List<BreakerSystem> getActiveSystems() {

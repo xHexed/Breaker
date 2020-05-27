@@ -1,9 +1,6 @@
-/*
- * Decompiled with CFR 0.145.
- */
-package com.asangarin.breaker.core;
+package com.github.xhexed.breaker.core;
 
-import com.asangarin.breaker.utility.BreakState;
+import com.github.xhexed.breaker.utility.BreakState;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class BlockConfiguration {
         states.add(state);
     }
 
-    public List<BreakState> getStates() {
+    List<BreakState> getStates() {
         return states;
     }
 
@@ -31,11 +28,11 @@ public class BlockConfiguration {
         return id;
     }
 
-    public int getMinHardness() {
+    int getMinHardness() {
         return minHardness;
     }
 
-    public int getMaxHardness() {
+    int getMaxHardness() {
         return maxHardness;
     }
 }

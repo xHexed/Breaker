@@ -1,15 +1,9 @@
-/*
- * Decompiled with CFR 0.145.
- * 
- * Could not load the following classes:
- *  org.bukkit.configuration.ConfigurationSection
- *  org.bukkit.configuration.file.YamlConfiguration
- */
-package com.asangarin.breaker.manager;
+package com.github.xhexed.breaker.manager;
 
-import com.asangarin.breaker.Breaker;
-import com.asangarin.breaker.core.BlockConfiguration;
-import com.asangarin.breaker.utility.BreakState;
+import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.core.BlockConfiguration;
+import com.github.xhexed.breaker.utility.BreakState;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;

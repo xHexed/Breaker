@@ -1,7 +1,4 @@
-/*
- * Decompiled with CFR 0.145.
- */
-package com.asangarin.breaker.utility;
+package com.github.xhexed.breaker.utility;
 
 import java.util.ArrayList;
 import java.util.List;
