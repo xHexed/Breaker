@@ -1,7 +1,5 @@
 package com.github.xhexed.breaker.core;
 
-import com.github.xhexed.breaker.Breaker;
-import com.github.xhexed.breaker.utility.BreakerSystem;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -9,19 +7,20 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.utility.BreakerSystem;
 import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class BreakingCore {
     private final Map<Integer, BreakingBlock> cachedBlocks = new HashMap<>();
-    private final List<Material> excludedMaterials;
+    private final Set<Material> excludedMaterials;
     private List<BreakerSystem> systems;
 
     public BreakingCore() {
@@ -51,9 +50,6 @@ public class BreakingCore {
                 final Block block = player.getWorld().getBlockAt(bp.getX(), bp.getY(), bp.getZ());
                 if (block == null) {
                     return;
-                }
-                if (digType != EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-                    event.getPlayer().removePotionEffect(PotionEffectType.SLOW_DIGGING);
                 }
                 if (excludedMaterials.contains(block.getType())) {
                     return;

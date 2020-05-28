@@ -1,9 +1,11 @@
 package com.github.xhexed.breaker.core;
 
 import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.manager.LegacyManager;
 import com.github.xhexed.breaker.utility.BreakState;
 import com.github.xhexed.breaker.utility.NMSHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,7 +49,14 @@ public class BreakingBlock {
     }
 
     private void finish() {
-        NMSHandler.breakAnimation(10, block, breaker);
+        final PreBlockBreakEvent event = new PreBlockBreakEvent(block, breaker);
+        Bukkit.getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            NMSHandler.breakAnimation(event.getStage(), block, breaker);
+        }
+        else {
+            NMSHandler.breakAnimation(10, block, breaker);
+        }
     }
 
     public Block getBlock() {
