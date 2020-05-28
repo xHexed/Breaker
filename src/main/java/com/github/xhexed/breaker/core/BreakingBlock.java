@@ -1,13 +1,11 @@
 package com.github.xhexed.breaker.core;
 
 import com.github.xhexed.breaker.Breaker;
-import com.github.xhexed.breaker.Settings;
 import com.github.xhexed.breaker.manager.LegacyManager;
 import com.github.xhexed.breaker.utility.BreakState;
 import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BreakingBlock {
@@ -50,16 +48,6 @@ public class BreakingBlock {
 
     private void finish() {
         NMSHandler.breakAnimation(10, block, breaker);
-        if (breaker.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
-            new BukkitRunnable(){
-
-                public void run() {
-                    if (!Settings.instance().permanentMiningFatigue()) {
-                        breaker.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-                    }
-                }
-            }.runTask(Breaker.plugin);
-        }
     }
 
     public Block getBlock() {

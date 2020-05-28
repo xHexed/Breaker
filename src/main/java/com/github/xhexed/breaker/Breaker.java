@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 
 public class Breaker extends JavaPlugin {
     public static Breaker plugin;
-    Settings settings;
     public ProtocolManager protocol;
     public StatesManager states;
     public Database database;
@@ -54,7 +53,6 @@ public class Breaker extends JavaPlugin {
             }
         }
         saveDefaultConfig();
-        settings = new Settings(getConfig().getConfigurationSection("settings"));
         getCommand("breaker").setExecutor(new BreakerCommand());
         getCommand("breaker").setTabCompleter(new BreakerCommand());
         protocol = ProtocolLibrary.getProtocolManager();
