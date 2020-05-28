@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_11_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
@@ -44,9 +45,9 @@ public class NMSHandler {
         Breaker.debug("Loaded NMS Version: 1.11_R1", 0);
     }
 
-    public static void breakAnimation(final int stage, final Block block, final EntityHuman player) {
+    public static void breakAnimation(final int stage, final Block block, final Player player) {
         ((CraftServer) Bukkit.getServer()).getHandle().sendPacketNearby(
-                player,
+                ((CraftHumanEntity) player).getHandle(),
                 block.getX(),
                 block.getY(),
                 block.getZ(),

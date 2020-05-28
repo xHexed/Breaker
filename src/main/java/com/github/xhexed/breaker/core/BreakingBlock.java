@@ -5,7 +5,6 @@ import com.github.xhexed.breaker.Settings;
 import com.github.xhexed.breaker.manager.LegacyManager;
 import com.github.xhexed.breaker.utility.BreakState;
 import com.github.xhexed.breaker.utility.NMSHandler;
-import net.minecraft.server.v1_11_R1.EntityHuman;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -28,7 +27,7 @@ public class BreakingBlock {
             int stage;
 
             public void run() {
-                NMSHandler.breakAnimation(stage, block, (EntityHuman) breaker);
+                NMSHandler.breakAnimation(stage, block, breaker);
                 ++stage;
                 if (stage > 10) {
                     breaker.playSound(block.getLocation(), NMSHandler.getBlockBreakSound(block), 1.0f, 1.0f);
@@ -50,7 +49,7 @@ public class BreakingBlock {
     }
 
     private void finish() {
-        NMSHandler.breakAnimation(10, block, (EntityHuman) breaker);
+        NMSHandler.breakAnimation(10, block, breaker);
         if (breaker.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
             new BukkitRunnable(){
 
