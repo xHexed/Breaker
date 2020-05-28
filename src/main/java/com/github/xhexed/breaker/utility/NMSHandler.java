@@ -3,14 +3,10 @@ package com.github.xhexed.breaker.utility;
 import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.core.BreakingCore;
 import net.minecraft.server.v1_11_R1.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_11_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
@@ -46,18 +42,11 @@ public class NMSHandler {
     }
 
     public static void breakAnimation(final int stage, final Block block, final Player player) {
-        ((CraftServer) Bukkit.getServer()).getHandle().sendPacketNearby(
-                ((CraftHumanEntity) player).getHandle(),
-                block.getX(),
-                block.getY(),
-                block.getZ(),
-                120,
-                ((CraftWorld) block.getWorld()).getHandle().dimension,
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(
                 new PacketPlayOutBlockBreakAnimation(BreakingCore.getBlockEntityId(block),
                                                      new BlockPosition(block.getX(), block.getY(), block.getZ()),
                                                      stage
-                                                     )
-        );
+        ));
     }
 
     public static void breakBlock(final Player player, final Location loc) {
