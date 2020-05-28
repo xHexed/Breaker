@@ -6,8 +6,7 @@ import com.github.xhexed.breaker.utility.BreakState;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ToolState
-implements BreakState {
+public class ToolState implements BreakState {
     private Material material;
     private int value;
 

@@ -16,6 +16,6 @@ STONE:
       #For a full list, please see the wiki.
       type: tool
       #The item that will trigger this state of the block.
-      material: WOODEN_PICKAXE
+      material: WOOD_PICKAXE
       #The value (ticks) to remove from the block hardness when this state is active
       hardness: 20

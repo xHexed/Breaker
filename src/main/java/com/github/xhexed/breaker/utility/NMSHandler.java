@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class NMSHandler {
     private static final Pattern DOT = Pattern.compile(".", Pattern.LITERAL);
-    private static final List<Material> excludedMaterials = new ArrayList<>(Arrays.asList(Material.AIR, Material.GRASS, Material.END_ROD, Material.BARRIER, Material.TORCH, Material.getMaterial("REDSTONE_TORCH_ON"), Material.getMaterial("REDSTONE_TORCH_OFF"), Material.getMaterial("LONG_GRASS"), Material.getMaterial("BEETROOT_BLOCK"), Material.WHEAT, Material.POTATO, Material.CARROT, Material.getMaterial("SAPLING"), Material.FLOWER_POT, Material.getMaterial("YELLOW_FLOWER"), Material.getMaterial("RED_ROSE"), Material.getMaterial("DOUBLE_PLANT"), Material.getMaterial("WATER_LILY"), Material.FIRE, Material.DEAD_BUSH, Material.MELON_STEM, Material.PUMPKIN_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.NETHER_WART_BLOCK, Material.REDSTONE_WIRE, Material.getMaterial("REDSTONE_COMPARATOR_OFF"), Material.getMaterial("REDSTONE_COMPARATOR_ON"), Material.SLIME_BLOCK, Material.getMaterial("DIODE_BLOCK_OFF"), Material.getMaterial("DIODE_BLOCK_ON"), Material.STRUCTURE_VOID, Material.getMaterial("SUGAR_CANE_BLOCK"), Material.TNT, Material.TRIPWIRE, Material.TRIPWIRE_HOOK));
+    private static final List<Material> excludedMaterials = new ArrayList<>(Arrays.asList(Material.AIR, Material.GRASS, Material.END_ROD, Material.BARRIER, Material.TORCH, Material.REDSTONE_TORCH_ON, Material.REDSTONE_TORCH_OFF, Material.LONG_GRASS, Material.BEETROOT_BLOCK, Material.WHEAT, Material.POTATO, Material.CARROT, Material.SAPLING, Material.FLOWER_POT, Material.YELLOW_FLOWER, Material.RED_ROSE, Material.DOUBLE_PLANT, Material.WATER_LILY, Material.FIRE, Material.DEAD_BUSH, Material.MELON_STEM, Material.PUMPKIN_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.NETHER_WART_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.SLIME_BLOCK, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.STRUCTURE_VOID, Material.SUGAR_CANE_BLOCK, Material.TNT, Material.TRIPWIRE, Material.TRIPWIRE_HOOK));
     private static Field breaksound;
     private static Field minecraftKey;
 
@@ -45,7 +45,6 @@ public class NMSHandler {
     }
 
     public static void breakAnimation(final int stage, final Block block, final EntityHuman player) {
-
         ((CraftServer) Bukkit.getServer()).getHandle().sendPacketNearby(
                 player,
                 block.getX(),

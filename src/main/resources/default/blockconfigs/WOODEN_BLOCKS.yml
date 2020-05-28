@@ -4,7 +4,7 @@ OAK_LOG:
   states:
     woodaxe:
       type: tool
-      material: WOODEN_AXE
+      material: WOOD_AXE
       hardness: 20
 BIRCH_LOG:
   max-hardness: 70

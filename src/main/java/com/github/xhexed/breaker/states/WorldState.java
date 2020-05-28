@@ -5,8 +5,7 @@ import com.github.xhexed.breaker.core.BreakingBlock;
 import com.github.xhexed.breaker.utility.BreakState;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class WorldState
-implements BreakState {
+public class WorldState implements BreakState {
     private int value;
     private String worldname;
 
