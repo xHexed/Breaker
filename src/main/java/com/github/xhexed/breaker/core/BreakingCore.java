@@ -9,7 +9,6 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.utility.BreakerSystem;
-import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,11 +19,10 @@ import java.util.stream.Collectors;
 
 public class BreakingCore {
     private final Map<Integer, BreakingBlock> cachedBlocks = new HashMap<>();
-    private final Set<Material> excludedMaterials;
+    private static final Set<Material> excludedMaterials = EnumSet.of(Material.AIR, Material.GRASS, Material.END_ROD, Material.BARRIER, Material.TORCH, Material.REDSTONE_TORCH_ON, Material.REDSTONE_TORCH_OFF, Material.LONG_GRASS, Material.BEETROOT_BLOCK, Material.WHEAT, Material.POTATO, Material.CARROT, Material.SAPLING, Material.FLOWER_POT, Material.YELLOW_FLOWER, Material.RED_ROSE, Material.DOUBLE_PLANT, Material.WATER_LILY, Material.FIRE, Material.DEAD_BUSH, Material.MELON_STEM, Material.PUMPKIN_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.NETHER_WART_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.SLIME_BLOCK, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.STRUCTURE_VOID, Material.SUGAR_CANE_BLOCK, Material.TNT, Material.TRIPWIRE, Material.TRIPWIRE_HOOK);
     private List<BreakerSystem> systems;
 
     public BreakingCore() {
-        excludedMaterials = NMSHandler.getExlcudedBlocks();
         systems           = new ArrayList<>();
         for (final Class breakerSystems : Breaker.plugin.system.registered()) {
             try {
