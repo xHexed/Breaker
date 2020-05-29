@@ -7,14 +7,14 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @SuppressWarnings("unused")
-public class PreBlockDanageEvent extends Event implements Cancellable {
+public class PreBlockDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Block block;
     private final Player player;
-    private int stage = 10;
+    private int stage;
     private boolean cancelled;
 
-    public PreBlockDanageEvent(final Block block, final Player player) {
+    public PreBlockDamageEvent(final Block block, final Player player) {
         this.block = block;
         this.player = player;
     }

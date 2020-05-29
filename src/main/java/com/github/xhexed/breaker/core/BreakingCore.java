@@ -8,32 +8,33 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.event.PreBlockDamageEvent;
 import com.github.xhexed.breaker.utility.BreakerSystem;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BreakingCore {
-    private final Map<Integer, BreakingBlock> cachedBlocks = new HashMap<>();
+    final Map<Integer, BreakingBlock> cachedBlocks = new HashMap<>();
     private static final Set<Material> excludedMaterials = EnumSet.of(Material.AIR, Material.GRASS, Material.END_ROD, Material.BARRIER, Material.TORCH, Material.REDSTONE_TORCH_ON, Material.REDSTONE_TORCH_OFF, Material.LONG_GRASS, Material.BEETROOT_BLOCK, Material.WHEAT, Material.POTATO, Material.CARROT, Material.SAPLING, Material.FLOWER_POT, Material.YELLOW_FLOWER, Material.RED_ROSE, Material.DOUBLE_PLANT, Material.WATER_LILY, Material.FIRE, Material.DEAD_BUSH, Material.MELON_STEM, Material.PUMPKIN_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.NETHER_WART_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.SLIME_BLOCK, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.STRUCTURE_VOID, Material.SUGAR_CANE_BLOCK, Material.TNT, Material.TRIPWIRE, Material.TRIPWIRE_HOOK);
-    private List<BreakerSystem> systems;
+    private final List<BreakerSystem> systems;
 
     public BreakingCore() {
         systems           = new ArrayList<>();
-        for (final Class breakerSystems : Breaker.plugin.system.registered()) {
+        for (final Class breakerSystems : Breaker.getPlugin().system.registered()) {
             try {
-                systems.add((BreakerSystem)breakerSystems.newInstance());
+                systems.add((BreakerSystem) breakerSystems.newInstance());
             }
             catch (final IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
-        systems = systems.stream().sorted(Comparator.comparingInt(BreakerSystem::priority)).collect(Collectors.toList());
-        Breaker.plugin.protocol.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(Breaker.plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG) {
+        systems.sort(Comparator.comparingInt(BreakerSystem::priority));
+        Breaker.getPlugin().protocol.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(Breaker.getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG) {
             public void onPacketReceiving(final PacketEvent event) {
                 final PacketContainer packet = event.getPacket();
                 final EnumWrappers.PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
@@ -54,20 +55,31 @@ public class BreakingCore {
                 }
                 BreakerSystem system = null;
                 for (final BreakerSystem sys : systems) {
-                    if (!Breaker.plugin.database.has(sys.getId(block))) continue;
+                    if (!Breaker.getPlugin().database.has(sys.getId(block))) continue;
                     system = sys;
                     break;
                 }
                 if (system != null) {
                     final BreakingBlock breakingBlock;
+                    final int id = getBlockEntityId(block);
                     if (digType == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-                        breakingBlock = new BreakingBlock(system.getId(block), block, player);
-                        cachedBlocks.put(BreakingCore.getBlockEntityId(block), breakingBlock);
-                        breakingBlock.start();
-                    } else {
-                        final int blockId = BreakingCore.getBlockEntityId(block);
-                        if (cachedBlocks.containsKey(blockId)) {
-                            breakingBlock = cachedBlocks.remove(blockId);
+                        if (cachedBlocks.containsKey(id)) {
+                            cachedBlocks.get(id).start();
+                        }
+                        else {
+                            final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player);
+                            Bukkit.getPluginManager().callEvent(e);
+                            if (event.isCancelled()) {
+                                return;
+                            }
+                            breakingBlock = new BreakingBlock(system.getId(block), block, player, e.getStage());
+                            cachedBlocks.put(id, breakingBlock);
+                            breakingBlock.start();
+                        }
+                    }
+                    else {
+                        if (cachedBlocks.containsKey(id)) {
+                            breakingBlock = cachedBlocks.remove(id);
                             breakingBlock.cancel();
                         }
                     }
@@ -77,11 +89,7 @@ public class BreakingCore {
     }
 
     public boolean contains(final Block block) {
-        return cachedBlocks.containsKey(BreakingCore.getBlockEntityId(block));
-    }
-
-    public void caught(final Block block) {
-        cachedBlocks.remove(BreakingCore.getBlockEntityId(block)).cancel();
+        return cachedBlocks.containsKey(getBlockEntityId(block));
     }
 
     public static int getBlockEntityId(final Block block) {

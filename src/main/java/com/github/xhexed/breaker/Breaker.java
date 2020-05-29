@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Breaker extends JavaPlugin {
-    public static Breaker plugin;
+    private static Breaker plugin;
     public ProtocolManager protocol;
     public StatesManager states;
     public Database database;
@@ -78,6 +78,10 @@ public class Breaker extends JavaPlugin {
         if (plugin.getConfig().getBoolean("debug.enabled") && plugin.getConfig().getInt("debug.depth") >= depth) {
             plugin.getLogger().info("[Debug] " + m);
         }
+    }
+
+    public static Breaker getPlugin() {
+        return plugin;
     }
 }
 

@@ -16,7 +16,7 @@ public class ConfigManager {
     private final Collection<BreakState> states = new ArrayList<>();
 
     public ConfigManager() {
-        for (final Class breakStates : Breaker.plugin.states.registered()) {
+        for (final Class breakStates : Breaker.getPlugin().states.registered()) {
             try {
                 states.add((BreakState)breakStates.newInstance());
             }
@@ -27,8 +27,8 @@ public class ConfigManager {
     }
 
     public void reload() {
-        Breaker.plugin.database.clear();
-        for (final File file : Objects.requireNonNull(new File(Breaker.plugin.getDataFolder(), "blockconfigs").listFiles())) {
+        Breaker.getPlugin().database.clear();
+        for (final File file : Objects.requireNonNull(new File(Breaker.getPlugin().getDataFolder(), "blockconfigs").listFiles())) {
             if (file.isDirectory() || !file.getName().substring(file.getName().lastIndexOf(46)).equalsIgnoreCase(".yml")) continue;
             final YamlConfiguration c = YamlConfiguration.loadConfiguration(file);
             c.getKeys(false).forEach(entries -> {
@@ -67,7 +67,7 @@ public class ConfigManager {
                         }
                     });
                 }
-                Breaker.plugin.database.add(block.getId(), block);
+                Breaker.getPlugin().database.add(block.getId(), block);
             });
         }
     }

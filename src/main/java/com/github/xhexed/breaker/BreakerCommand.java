@@ -22,10 +22,10 @@ class BreakerCommand implements CommandExecutor, TabCompleter {
         }
         final String pluginPrefix = "§6[§4Breaker§6] ";
         if (args == null || args.length == 0) {
-            sender.sendMessage(pluginPrefix + ChatColor.GREEN + "Version " + Breaker.plugin.getDescription().getVersion());
+            sender.sendMessage(pluginPrefix + ChatColor.GREEN + "Version " + Breaker.getPlugin().getDescription().getVersion());
         } else {
             if ("reload".equals(args[0])) {
-                Breaker.plugin.onReload();
+                Breaker.getPlugin().onReload();
                 sender.sendMessage(pluginPrefix + ChatColor.GREEN + "Successfully reloaded.");
             }
             else {
