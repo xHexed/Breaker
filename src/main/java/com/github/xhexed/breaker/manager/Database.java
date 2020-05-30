@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Database {
-    private final Map<Pair<Material, Integer>, Integer> blockConfigs = new HashMap<>();
+    private final Map<Pair<Material, Byte>, Integer> blockConfigs = new HashMap<>();
 
-    public void add(final Pair<Material, Integer> mat, final int num) {
+    public void add(final Pair<Material, Byte> mat, final int num) {
         Breaker.debug("Added " + mat + " to the Database!", 3);
         blockConfigs.put(mat, num);
     }
 
-    public int get(final Material material, final int id) {
+    public int get(final Material material, final byte id) {
         return blockConfigs.get(new Pair<>(material, id));
     }
 
@@ -25,9 +25,10 @@ public class Database {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean has(final Material material, final int id) {
-        Breaker.debug("Checking if " + material + " exists in Database... (" + blockConfigs.containsKey(new Pair<>(material, id)) + ")", 3);
-        return blockConfigs.containsKey(new Pair<>(material, id));
+    public boolean has(final Material material, final byte id) {
+        final boolean contains = blockConfigs.containsKey(new Pair<>(material, id));
+        Breaker.debug("Checking if " + material + "=" + id + " exists in Database... (" + contains + ")", 3);
+        return contains;
     }
 }
 

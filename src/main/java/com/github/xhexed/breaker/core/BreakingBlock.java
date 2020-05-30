@@ -15,15 +15,7 @@ class BreakingBlock {
     private final Block block;
     private final Player breaker;
     private int stage;
-    private final BukkitRunnable task = new BukkitRunnable() {
-        public void run() {
-            NMSHandler.breakAnimation(stage, block, breaker);
-            stage++;
-            if (stage == 10) {
-                finish();
-            }
-        }
-    };
+    private BukkitRunnable task;
     private final int breakTime;
 
     BreakingBlock(final PreBlockDamageEvent event) {
@@ -34,6 +26,15 @@ class BreakingBlock {
     }
 
     void start() {
+        task = new BukkitRunnable() {
+            public void run() {
+                NMSHandler.breakAnimation(stage, block, breaker);
+                stage++;
+                if (stage > 10) {
+                    finish();
+                }
+            }
+        };
         task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
     }
 
@@ -44,16 +45,14 @@ class BreakingBlock {
     private void finish() {
         final PreBlockBreakEvent event = new PreBlockBreakEvent(block, breaker);
         Bukkit.getPluginManager().callEvent(event);
+        task.cancel();
 
         if (event.getStage() != 10) {
             stage = event.getStage();
-            task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
+            start();
         }
 
-        if (event.isCancelled()) {
-            task.cancel();
-        }
-        else {
+        if (!event.isCancelled()) {
             breaker.playSound(block.getLocation(), NMSHandler.getBlockBreakSound(block), 1.0f, 1.0f);
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
             NMSHandler.breakBlock(breaker, block.getLocation());

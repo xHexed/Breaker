@@ -37,8 +37,17 @@ public class Breaker extends JavaPlugin {
         for (final String entries : config.getKeys(false)) {
             final ConfigurationSection section = config.getConfigurationSection(entries);
             try {
-                database.add(new Pair<>(Material.valueOf(entries.substring(0, entries.indexOf('.'))),
-                                               Integer.parseInt(entries.substring(entries.indexOf('.') + 1))),
+                final Material material;
+                final byte id;
+                if (entries.contains(":")) {
+                    material = Material.valueOf(entries.substring(0, entries.indexOf(':')));
+                    id = Byte.parseByte(entries.substring(entries.indexOf(':') + 1));
+                }
+                else {
+                    material = Material.valueOf(entries);
+                    id = 0;
+                }
+                database.add(new Pair<>(material, id),
                                     section.getInt("hardness", 1));
             }
             catch (final IllegalArgumentException e) {

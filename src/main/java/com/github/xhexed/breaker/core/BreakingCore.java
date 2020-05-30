@@ -41,7 +41,7 @@ public class BreakingCore {
                 final Block block = player.getWorld().getBlockAt(bp.getX(), bp.getY(), bp.getZ());
                 if (block == null ||
                         excludedMaterials.contains(block.getType()) ||
-                        !Breaker.getPlugin().database.has(block.getType(), block.getTypeId())
+                        !Breaker.getPlugin().database.has(block.getType(), block.getData())
                 ) return;
                 final BreakingBlock breakingBlock;
                 final int id = getBlockEntityId(block);
@@ -50,7 +50,7 @@ public class BreakingCore {
                         cachedBlocks.get(id).start();
                     }
                     else {
-                        final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getTypeId()));
+                        final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()));
                         Bukkit.getPluginManager().callEvent(e);
                         if (event.isCancelled()) {
                             return;

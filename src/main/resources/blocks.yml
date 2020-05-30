@@ -4,6 +4,5 @@ STONE:
   hardness: 50
 LOG:
   hardness: 50
-LOG.1:
-  id: 1
+LOG:1:
   hardness: 50
