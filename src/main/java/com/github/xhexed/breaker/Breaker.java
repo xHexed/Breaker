@@ -2,6 +2,7 @@ package com.github.xhexed.breaker;
 
 import com.github.xhexed.breaker.core.BreakingCore;
 import com.github.xhexed.breaker.manager.Database;
+import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,11 +32,18 @@ public class Breaker extends JavaPlugin {
 
     void onReload() {
         reloadConfig();
-        plugin.database.clear();
-        final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "blocks.yml"));
+        database.clear();
+        final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "blocks.yml"));
         for (final String entries : config.getKeys(false)) {
             final ConfigurationSection section = config.getConfigurationSection(entries);
-            plugin.database.add(Material.valueOf(section.getName()), section.getInt("hardness", 1));
+            try {
+                database.add(new Pair<>(Material.valueOf(entries.substring(0, entries.indexOf('.'))),
+                                               Integer.parseInt(entries.substring(entries.indexOf('.') + 1))),
+                                    section.getInt("hardness", 1));
+            }
+            catch (final IllegalArgumentException e) {
+                getLogger().warning("Couldn't load block " + entries + "!");
+            }
         }
     }
 

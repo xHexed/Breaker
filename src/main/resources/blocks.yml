@@ -2,7 +2,8 @@
 STONE:
   #The block break speed (in ticks) if no state is present.
   hardness: 50
-OAK_LOG:
+LOG:
   hardness: 50
-BIRCH_LOG:
-  hardness: 70
+LOG.1:
+  id: 1
+  hardness: 50

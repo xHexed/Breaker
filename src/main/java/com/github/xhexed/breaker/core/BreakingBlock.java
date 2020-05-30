@@ -15,7 +15,15 @@ class BreakingBlock {
     private final Block block;
     private final Player breaker;
     private int stage;
-    private BukkitRunnable task;
+    private final BukkitRunnable task = new BukkitRunnable() {
+        public void run() {
+            NMSHandler.breakAnimation(stage, block, breaker);
+            stage++;
+            if (stage == 10) {
+                finish();
+            }
+        }
+    };
     private final int breakTime;
 
     BreakingBlock(final PreBlockDamageEvent event) {
@@ -26,22 +34,10 @@ class BreakingBlock {
     }
 
     void start() {
-        task = new BukkitRunnable() {
-            public void run() {
-                NMSHandler.breakAnimation(stage, block, breaker);
-                stage++;
-                if (stage == 10) {
-                    finish();
-                }
-            }
-        };
         task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
     }
 
     void cancel() {
-        if (task == null) {
-            return;
-        }
         task.cancel();
     }
 

@@ -2,6 +2,7 @@ package com.github.xhexed.breaker;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -25,11 +26,13 @@ class EventListener implements Listener {
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public static void blockDamage(final BlockDamageEvent e) {
         debug("BlockDamageEvent: " + getPlugin().core.contains(e.getBlock()), 5);
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
-        if (!getPlugin().database.has(e.getBlock().getType()) || !e.getInstaBreak()) return;
+        final Block block = e.getBlock();
+        if (!getPlugin().database.has(block.getType(), block.getTypeId()) || !e.getInstaBreak()) return;
         e.setCancelled(true);
     }
 
