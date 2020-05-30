@@ -14,11 +14,6 @@ public class Database {
         blockConfigs.put(config.toLowerCase(), block);
     }
 
-    public BlockConfiguration get(final String config) {
-        Breaker.debug("Retrieving " + config.toLowerCase() + " from the Database!", 3);
-        return blockConfigs.get(config.toLowerCase());
-    }
-
     void clear() {
         Breaker.debug("Cleared Database!", 4);
         blockConfigs.clear();

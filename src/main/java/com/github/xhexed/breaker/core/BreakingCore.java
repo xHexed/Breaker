@@ -69,7 +69,7 @@ public class BreakingCore {
                             if (event.isCancelled()) {
                                 return;
                             }
-                            breakingBlock = new BreakingBlock(system.getId(block), block, player, e.getStage());
+                            breakingBlock = new BreakingBlock(e);
                             cachedBlocks.put(id, breakingBlock);
                             breakingBlock.start();
                         }

@@ -2,7 +2,7 @@ package com.github.xhexed.breaker.core;
 
 import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
-import com.github.xhexed.breaker.utility.BreakState;
+import com.github.xhexed.breaker.event.PreBlockDamageEvent;
 import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -14,15 +14,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class BreakingBlock {
     private final Block block;
     private final Player breaker;
-    private final BlockConfiguration blockConfig;
     private int stage;
     private BukkitRunnable task;
+    private final int breakTime;
 
-    BreakingBlock(final String id, final Block block, final Player breaker, final int stage) {
-        blockConfig = Breaker.getPlugin().database.get(id);
-        this.block  = block;
-        this.breaker = breaker;
-        this.stage = stage;
+    BreakingBlock(final PreBlockDamageEvent event) {
+        block  = event.getBlock();
+        breaker = event.getPlayer();
+        stage = event.getStage();
+        breakTime = event.getBreakTime();
     }
 
     void start() {
@@ -36,7 +36,7 @@ public class BreakingBlock {
                 }
             }
         };
-        task.runTaskTimer(Breaker.getPlugin(), 0L, calculateBreakTime() / 10);
+        task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
     }
 
     void cancel() {
@@ -69,18 +69,5 @@ public class BreakingBlock {
     public Player getBreaker() {
         return breaker;
     }
-
-    private int calculateBreakTime() {
-        int breakingTime = blockConfig.getMaxHardness();
-        for (final BreakState state : blockConfig.getStates()) {
-            Breaker.debug("Found state! " + state, 20);
-            if (!state.activeState(this)) continue;
-            breakingTime -= state.getStateValue(this);
-        }
-        breakingTime = Math.max(breakingTime, blockConfig.getMinHardness());
-        Breaker.debug("Breaking Time: " + breakingTime, 1);
-        return breakingTime;
-    }
-
 }
 
