@@ -30,9 +30,8 @@ class BreakingBlock {
             public void run() {
                 NMSHandler.breakAnimation(stage, block, breaker);
                 stage++;
-                if (stage > 10) {
+                if (stage == 10) {
                     finish();
-                    cancel();
                 }
             }
         };
@@ -49,16 +48,20 @@ class BreakingBlock {
     private void finish() {
         final PreBlockBreakEvent event = new PreBlockBreakEvent(block, breaker);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.getStage() != 10) {
+            stage = event.getStage();
+            task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
+        }
+
         if (event.isCancelled()) {
-            NMSHandler.breakAnimation(event.getStage(), block, breaker);
+            task.cancel();
         }
         else {
             breaker.playSound(block.getLocation(), NMSHandler.getBlockBreakSound(block), 1.0f, 1.0f);
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
             NMSHandler.breakBlock(breaker, block.getLocation());
-            NMSHandler.breakAnimation(10, block, breaker);
-            final int blockId = BreakingCore.getBlockEntityId(block);
-            Breaker.getPlugin().core.cachedBlocks.remove(blockId);
+            Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
         }
     }
 }
