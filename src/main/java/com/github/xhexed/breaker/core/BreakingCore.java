@@ -38,9 +38,6 @@ public class BreakingCore {
             public void onPacketReceiving(final PacketEvent event) {
                 final PacketContainer packet = event.getPacket();
                 final EnumWrappers.PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
-                if (event.getPacketType() != PacketType.Play.Client.BLOCK_DIG) {
-                    return;
-                }
                 final Player player = event.getPlayer();
                 if (player.getGameMode().equals(GameMode.CREATIVE)) {
                     return;
@@ -79,7 +76,7 @@ public class BreakingCore {
                     }
                     else {
                         if (cachedBlocks.containsKey(id)) {
-                            breakingBlock = cachedBlocks.remove(id);
+                            breakingBlock = cachedBlocks.get(id);
                             breakingBlock.cancel();
                         }
                     }
