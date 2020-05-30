@@ -1,21 +1,21 @@
 package com.github.xhexed.breaker.manager;
 
 import com.github.xhexed.breaker.Breaker;
-import com.github.xhexed.breaker.core.BlockConfiguration;
+import org.bukkit.Material;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class Database {
-    private final Map<String, BlockConfiguration> blockConfigs = new HashMap<>();
+    private final Map<Material, Integer> blockConfigs = new EnumMap<>(Material.class);
 
-    public void add(final String config, final BlockConfiguration block) {
-        Breaker.debug("Added " + config.toLowerCase() + " to the Database!", 3);
-        blockConfigs.put(config.toLowerCase(), block);
+    public void add(final Material mat, final Integer num) {
+        Breaker.debug("Added " + mat + " to the Database!", 3);
+        blockConfigs.put(mat, num);
     }
 
-    public BlockConfiguration get(final String id) {
-        return blockConfigs.get(id);
+    public int get(final Material material) {
+        return blockConfigs.get(material);
     }
 
     public void clear() {
@@ -24,9 +24,9 @@ public class Database {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean has(final String config) {
-        Breaker.debug("Checking if " + config.toLowerCase() + " exists in Database... (" + blockConfigs.containsKey(config.toLowerCase()) + ")", 3);
-        return blockConfigs.containsKey(config.toLowerCase());
+    public boolean has(final Material material) {
+        Breaker.debug("Checking if " + material + " exists in Database... (" + blockConfigs.containsKey(material) + ")", 3);
+        return blockConfigs.containsKey(material);
     }
 }
 

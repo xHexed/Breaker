@@ -1,9 +1,9 @@
 package com.github.xhexed.breaker;
 
-import com.github.xhexed.breaker.core.BlockConfiguration;
 import com.github.xhexed.breaker.core.BreakingCore;
 import com.github.xhexed.breaker.manager.Database;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,8 +35,7 @@ public class Breaker extends JavaPlugin {
         final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "blocks.yml"));
         for (final String entries : config.getKeys(false)) {
             final ConfigurationSection section = config.getConfigurationSection(entries);
-            final BlockConfiguration block = new BlockConfiguration(section.getName(), section.getInt("hardness", 1));
-            plugin.database.add(block.getId(), block);
+            plugin.database.add(Material.valueOf(section.getName()), section.getInt("hardness", 1));
         }
     }
 

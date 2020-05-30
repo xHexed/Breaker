@@ -29,7 +29,7 @@ class EventListener implements Listener {
     public static void blockDamage(final BlockDamageEvent e) {
         debug("BlockDamageEvent: " + getPlugin().core.contains(e.getBlock()), 5);
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
-        if (!getPlugin().database.has(e.getBlock().getType().name()) || !e.getInstaBreak()) return;
+        if (!getPlugin().database.has(e.getBlock().getType()) || !e.getInstaBreak()) return;
         e.setCancelled(true);
     }
 
