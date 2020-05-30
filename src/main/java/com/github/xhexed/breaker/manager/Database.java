@@ -9,12 +9,16 @@ import java.util.Map;
 public class Database {
     private final Map<String, BlockConfiguration> blockConfigs = new HashMap<>();
 
-    void add(final String config, final BlockConfiguration block) {
+    public void add(final String config, final BlockConfiguration block) {
         Breaker.debug("Added " + config.toLowerCase() + " to the Database!", 3);
         blockConfigs.put(config.toLowerCase(), block);
     }
 
-    void clear() {
+    public BlockConfiguration get(final String id) {
+        return blockConfigs.get(id);
+    }
+
+    public void clear() {
         Breaker.debug("Cleared Database!", 4);
         blockConfigs.clear();
     }

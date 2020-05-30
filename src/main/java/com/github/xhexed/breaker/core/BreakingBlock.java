@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class BreakingBlock {
+class BreakingBlock {
     private final Block block;
     private final Player breaker;
     private int stage;
@@ -60,14 +60,6 @@ public class BreakingBlock {
             final int blockId = BreakingCore.getBlockEntityId(block);
             Breaker.getPlugin().core.cachedBlocks.remove(blockId);
         }
-    }
-
-    public Block getBlock() {
-        return block;
-    }
-
-    public Player getBreaker() {
-        return breaker;
     }
 }
 

@@ -15,9 +15,10 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
     private boolean cancelled;
     private int breakTime;
 
-    public PreBlockDamageEvent(final Block block, final Player player) {
-        this.block = block;
-        this.player = player;
+    public PreBlockDamageEvent(final Block block, final Player player, final int breakTime) {
+        this.block     = block;
+        this.player    = player;
+        this.breakTime = breakTime;
     }
 
     public Block getBlock() {

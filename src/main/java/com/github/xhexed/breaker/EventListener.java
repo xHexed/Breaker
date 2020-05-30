@@ -1,6 +1,5 @@
 package com.github.xhexed.breaker;
 
-import com.github.xhexed.breaker.utility.BreakerSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -12,6 +11,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import static com.github.xhexed.breaker.Breaker.*;
 
 class EventListener implements Listener {
     @EventHandler
@@ -26,13 +27,10 @@ class EventListener implements Listener {
 
     @EventHandler
     public static void blockDamage(final BlockDamageEvent e) {
-        Breaker.debug("BlockDamageEvent: " + Breaker.getPlugin().core.contains(e.getBlock()), 5);
+        debug("BlockDamageEvent: " + getPlugin().core.contains(e.getBlock()), 5);
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
-        for (final BreakerSystem s : Breaker.getPlugin().core.getActiveSystems()) {
-            if (!Breaker.getPlugin().database.has(s.getId(e.getBlock()))) continue;
-            if (!e.getInstaBreak()) continue;
-            e.setCancelled(true);
-        }
+        if (!getPlugin().database.has(e.getBlock().getType().name()) || !e.getInstaBreak()) return;
+        e.setCancelled(true);
     }
 
     @EventHandler
@@ -40,12 +38,12 @@ class EventListener implements Listener {
         if (e.getItem().getType() != Material.MILK_BUCKET) {
             return;
         }
-        Bukkit.getScheduler().runTaskLater(Breaker.getPlugin(), () -> e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true), 2L);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true), 2L);
     }
 
     @EventHandler
-    public void c(final BlockBreakEvent e) {
-        Breaker.debug("BlockBreakEvent: " + Breaker.getPlugin().core.contains(e.getBlock()), 5);
+    public void playerBreakBlock(final BlockBreakEvent e) {
+        debug("BlockBreakEvent: " + getPlugin().core.contains(e.getBlock()), 5);
     }
 }
 

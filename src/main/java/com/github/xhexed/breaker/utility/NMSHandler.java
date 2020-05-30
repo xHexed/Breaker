@@ -1,6 +1,5 @@
 package com.github.xhexed.breaker.utility;
 
-import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.core.BreakingCore;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
@@ -30,10 +29,6 @@ public class NMSHandler {
         catch (final NoSuchFieldException e) {
             e.printStackTrace();
         }
-    }
-
-    public NMSHandler() {
-        Breaker.debug("Loaded NMS Version: 1.11_R1", 0);
     }
 
     public static void breakAnimation(final int stage, final Block block, final Player player) {
