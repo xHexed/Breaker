@@ -46,22 +46,21 @@ public class BreakingCore {
                 final int id = getBlockEntityId(block);
                 if (packet.getPlayerDigTypes().getValues().get(0) == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
                     final PreBlockDamageEvent e;
+                    final int breakTime = Breaker.getPlugin().database.get(block.getType(), block.getData());
                     if (cachedBlocks.containsKey(id)) {
                         final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
                         final String name = player.getName();
                         if (list.containsKey(name)) {
                             breakingBlock = list.get(name);
-                            e             = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
+                            e             = new PreBlockDamageEvent(block, player, breakTime, breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
                             Bukkit.getPluginManager().callEvent(e);
                             if (e.isCancelled()) {
                                 return;
                             }
-                            breakingBlock.setBreakTime(e.getBreakTime());
-                            breakingBlock.setStage(e.getStage());
-                            breakingBlock.setLastItem(e.getLastItem());
+                            breakingBlock.update(e);
                         }
                         else {
-                            e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0, player.getInventory().getItemInMainHand());
+                            e = new PreBlockDamageEvent(block, player, breakTime, 0, 0, player.getInventory().getItemInMainHand());
                             Bukkit.getPluginManager().callEvent(e);
                             if (e.isCancelled()) {
                                 return;
@@ -71,7 +70,7 @@ public class BreakingCore {
                         }
                     }
                     else {
-                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0, player.getInventory().getItemInMainHand());
+                        e = new PreBlockDamageEvent(block, player, breakTime, 0, 0, player.getInventory().getItemInMainHand());
                         Bukkit.getPluginManager().callEvent(e);
                         if (e.isCancelled()) {
                             return;

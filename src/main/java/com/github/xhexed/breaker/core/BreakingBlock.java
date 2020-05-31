@@ -65,25 +65,19 @@ class BreakingBlock {
         }
     }
 
+    void update(final PreBlockDamageEvent event) {
+        stage = event.getStage();
+        timeBroken = event.getTimeBroken();
+        breakTime = event.getBreakTime();
+        lastItem = event.getLastItem();
+    }
+
     int getStage() {
         return stage;
     }
 
-    void setStage(final int stage) {
-        this.stage = stage;
-    }
-
-    void setBreakTime(final int breakTime) {
-        this.breakTime = breakTime;
-        timeBroken = stage * breakTime / 10;
-    }
-
     ItemStack getLastItem() {
         return lastItem;
-    }
-
-    void setLastItem(final ItemStack lastItem) {
-        this.lastItem = lastItem;
     }
 
     int getTimeBroken() {
