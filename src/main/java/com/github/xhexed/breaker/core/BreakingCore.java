@@ -24,7 +24,7 @@ import java.util.Set;
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 
 public class BreakingCore {
-    final Map<Integer, BreakingBlock> cachedBlocks = new HashMap<>();
+    final Map<Integer, HashMap<String, BreakingBlock>> cachedBlocks = new HashMap<>();
     private static final Set<Material> excludedMaterials = EnumSet.of(Material.AIR, Material.GRASS, Material.END_ROD, Material.BARRIER, Material.TORCH, Material.REDSTONE_TORCH_ON, Material.REDSTONE_TORCH_OFF, Material.LONG_GRASS, Material.BEETROOT_BLOCK, Material.WHEAT, Material.POTATO, Material.CARROT, Material.SAPLING, Material.FLOWER_POT, Material.YELLOW_FLOWER, Material.RED_ROSE, Material.DOUBLE_PLANT, Material.WATER_LILY, Material.FIRE, Material.DEAD_BUSH, Material.MELON_STEM, Material.PUMPKIN_STEM, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.NETHER_WART_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.SLIME_BLOCK, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.STRUCTURE_VOID, Material.SUGAR_CANE_BLOCK, Material.TNT, Material.TRIPWIRE, Material.TRIPWIRE_HOOK);
 
     @SuppressWarnings("deprecation")
@@ -47,11 +47,16 @@ public class BreakingCore {
                 if (packet.getPlayerDigTypes().getValues().get(0) == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
                     final PreBlockDamageEvent e;
                     if (cachedBlocks.containsKey(id)) {
-                        breakingBlock = cachedBlocks.get(id);
-                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken());
-                        Bukkit.getPluginManager().callEvent(e);
-                        if (e.isCancelled()) {
-                            return;
+                        final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
+                        final String name = player.getName();
+                        if (list.containsKey(name)) {
+                            breakingBlock = list.get(name);
+                            e             = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken());
+                            Bukkit.getPluginManager().callEvent(e);
+                            if (e.isCancelled()) {
+                                return;
+                            }
+                            breakingBlock.start();
                         }
                     }
                     else {
@@ -60,15 +65,21 @@ public class BreakingCore {
                         if (e.isCancelled()) {
                             return;
                         }
+                        final HashMap<String, BreakingBlock> list = new HashMap<>();
                         breakingBlock = new BreakingBlock(e);
-                        cachedBlocks.put(id, breakingBlock);
+                        list.put(player.getName(), breakingBlock);
+                        cachedBlocks.put(id, list);
+                        breakingBlock.start();
                     }
-                    breakingBlock.start();
                 }
                 else {
                     if (cachedBlocks.containsKey(id)) {
-                        breakingBlock = cachedBlocks.get(id);
-                        breakingBlock.cancel();
+                        final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
+                        final String name = player.getName();
+                        if (list.containsKey(name)) {
+                            breakingBlock = list.get(name);
+                            breakingBlock.cancel();
+                        }
                     }
                 }
             }
