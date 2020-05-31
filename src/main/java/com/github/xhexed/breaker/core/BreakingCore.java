@@ -56,7 +56,15 @@ public class BreakingCore {
                             if (e.isCancelled()) {
                                 return;
                             }
-                            breakingBlock.start();
+                        }
+                        else {
+                            e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0);
+                            Bukkit.getPluginManager().callEvent(e);
+                            if (e.isCancelled()) {
+                                return;
+                            }
+                            breakingBlock = new BreakingBlock(e);
+                            list.put(player.getName(), breakingBlock);
                         }
                     }
                     else {
@@ -69,8 +77,8 @@ public class BreakingCore {
                         breakingBlock = new BreakingBlock(e);
                         list.put(player.getName(), breakingBlock);
                         cachedBlocks.put(id, list);
-                        breakingBlock.start();
                     }
+                    breakingBlock.start();
                 }
                 else {
                     if (cachedBlocks.containsKey(id)) {
