@@ -3,7 +3,6 @@ package com.github.xhexed.breaker.core;
 import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
-import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -11,10 +10,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import static com.github.xhexed.breaker.utility.NMSHandler.*;
+
 class BreakingBlock {
     private final Block block;
     private final Player breaker;
     private int stage;
+    private int timeBroken;
     private BukkitRunnable task;
     private final int breakTime;
 
@@ -23,19 +25,20 @@ class BreakingBlock {
         breaker = event.getPlayer();
         stage = event.getStage();
         breakTime = event.getBreakTime();
+        timeBroken = stage * breakTime / 10;
     }
 
     void start() {
         task = new BukkitRunnable() {
             public void run() {
-                NMSHandler.breakAnimation(stage, block, breaker);
-                stage++;
-                if (stage > 10) {
+                breakAnimation(Math.min(timeBroken * 10 / breakTime, 9), block, breaker);
+                timeBroken++;
+                if (timeBroken == breakTime) {
                     finish();
                 }
             }
         };
-        task.runTaskTimer(Breaker.getPlugin(), 0L, breakTime / 10);
+        task.runTaskTimer(Breaker.getPlugin(), 0, 1);
     }
 
     void cancel() {
@@ -53,9 +56,9 @@ class BreakingBlock {
         }
 
         if (!event.isCancelled()) {
-            breaker.playSound(block.getLocation(), NMSHandler.getBlockBreakSound(block), 1.0f, 1.0f);
+            breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
-            NMSHandler.breakBlock(breaker, block.getLocation());
+            breakBlock(breaker, block.getLocation());
             Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
         }
     }

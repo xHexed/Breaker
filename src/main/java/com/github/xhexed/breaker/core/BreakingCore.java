@@ -32,7 +32,6 @@ public class BreakingCore {
         ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG) {
             public void onPacketReceiving(final PacketEvent event) {
                 final PacketContainer packet = event.getPacket();
-                final EnumWrappers.PlayerDigType digType = packet.getPlayerDigTypes().getValues().get(0);
                 final Player player = event.getPlayer();
                 if (player.getGameMode().equals(GameMode.CREATIVE)) {
                     return;
@@ -45,16 +44,16 @@ public class BreakingCore {
                 ) return;
                 final BreakingBlock breakingBlock;
                 final int id = getBlockEntityId(block);
-                if (digType == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
+                if (packet.getPlayerDigTypes().getValues().get(0) == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
+                    final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()));
+                    Bukkit.getPluginManager().callEvent(e);
+                    if (e.isCancelled()) {
+                        return;
+                    }
                     if (cachedBlocks.containsKey(id)) {
                         cachedBlocks.get(id).start();
                     }
                     else {
-                        final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()));
-                        Bukkit.getPluginManager().callEvent(e);
-                        if (event.isCancelled()) {
-                            return;
-                        }
                         breakingBlock = new BreakingBlock(e);
                         cachedBlocks.put(id, breakingBlock);
                         breakingBlock.start();
