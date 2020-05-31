@@ -11,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.github.xhexed.breaker.utility.NMSHandler.*;
 
 class BreakingBlock {
@@ -61,7 +64,10 @@ class BreakingBlock {
             breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
             breakBlock(breaker, block.getLocation());
-            Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
+            final HashMap<String, BreakingBlock> list = Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
+            for (final Map.Entry<String, BreakingBlock> i : list.entrySet()) {
+                i.getValue().cancel();
+            }
         }
     }
 
