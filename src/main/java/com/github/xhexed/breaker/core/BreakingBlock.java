@@ -33,7 +33,7 @@ class BreakingBlock {
             public void run() {
                 breakAnimation(timeBroken * 10 / breakTime, block, breaker);
                 timeBroken++;
-                if (timeBroken == breakTime) {
+                if (timeBroken > breakTime) {
                     finish();
                 }
             }
