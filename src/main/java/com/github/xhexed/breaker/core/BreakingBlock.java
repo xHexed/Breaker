@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,7 +19,8 @@ class BreakingBlock {
     private int stage;
     private int timeBroken;
     private BukkitRunnable task;
-    private final int breakTime;
+    private int breakTime;
+    private ItemStack lastItem;
 
     BreakingBlock(final PreBlockDamageEvent event) {
         block  = event.getBlock();
@@ -65,6 +67,23 @@ class BreakingBlock {
 
     int getStage() {
         return stage;
+    }
+
+    void setStage(final int stage) {
+        this.stage = stage;
+    }
+
+    void setBreakTime(final int breakTime) {
+        this.breakTime = breakTime;
+        timeBroken = stage * breakTime / 10;
+    }
+
+    ItemStack getLastItem() {
+        return lastItem;
+    }
+
+    void setLastItem(final ItemStack lastItem) {
+        this.lastItem = lastItem;
     }
 
     int getTimeBroken() {

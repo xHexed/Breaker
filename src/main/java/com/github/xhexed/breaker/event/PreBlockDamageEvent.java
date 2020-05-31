@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("unused")
 public class PreBlockDamageEvent extends Event implements Cancellable {
@@ -15,13 +16,15 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
     private boolean cancelled;
     private int breakTime;
     private int timeBroken;
+    private final ItemStack lastItem;
 
-    public PreBlockDamageEvent(final Block block, final Player player, final int breakTime, final int stage, final int timeBroken) {
+    public PreBlockDamageEvent(final Block block, final Player player, final int breakTime, final int stage, final int timeBroken, final ItemStack lastItem) {
         this.block      = block;
         this.player     = player;
         this.breakTime  = breakTime;
         this.stage      = stage;
         this.timeBroken = timeBroken;
+        this.lastItem   = lastItem;
     }
 
     public Block getBlock() {
@@ -54,6 +57,10 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
 
     public void setTimeBroken(final int timeBroken) {
         this.timeBroken = timeBroken;
+    }
+
+    public ItemStack getLastItem() {
+        return lastItem;
     }
 
     @Override

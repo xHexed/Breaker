@@ -51,14 +51,17 @@ public class BreakingCore {
                         final String name = player.getName();
                         if (list.containsKey(name)) {
                             breakingBlock = list.get(name);
-                            e             = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken());
+                            e             = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
                             Bukkit.getPluginManager().callEvent(e);
                             if (e.isCancelled()) {
                                 return;
                             }
+                            breakingBlock.setBreakTime(e.getBreakTime());
+                            breakingBlock.setStage(e.getStage());
+                            breakingBlock.setLastItem(e.getLastItem());
                         }
                         else {
-                            e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0);
+                            e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0, player.getInventory().getItemInMainHand());
                             Bukkit.getPluginManager().callEvent(e);
                             if (e.isCancelled()) {
                                 return;
@@ -68,7 +71,7 @@ public class BreakingCore {
                         }
                     }
                     else {
-                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0);
+                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0, player.getInventory().getItemInMainHand());
                         Bukkit.getPluginManager().callEvent(e);
                         if (e.isCancelled()) {
                             return;
