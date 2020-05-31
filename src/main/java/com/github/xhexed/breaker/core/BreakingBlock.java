@@ -31,7 +31,7 @@ class BreakingBlock {
     void start() {
         task = new BukkitRunnable() {
             public void run() {
-                breakAnimation(Math.min(timeBroken * 10 / breakTime, 9), block, breaker);
+                breakAnimation(timeBroken * 10 / breakTime, block, breaker);
                 timeBroken++;
                 if (timeBroken == breakTime) {
                     finish();
@@ -50,7 +50,7 @@ class BreakingBlock {
         Bukkit.getPluginManager().callEvent(event);
         task.cancel();
 
-        if (event.getStage() != 10) {
+        if (event.getStage() < 10) {
             stage = event.getStage();
             start();
         }
@@ -61,6 +61,14 @@ class BreakingBlock {
             breakBlock(breaker, block.getLocation());
             Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
         }
+    }
+
+    int getStage() {
+        return stage;
+    }
+
+    int getTimeBroken() {
+        return timeBroken;
     }
 }
 

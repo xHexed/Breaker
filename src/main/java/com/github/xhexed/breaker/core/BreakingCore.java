@@ -45,20 +45,26 @@ public class BreakingCore {
                 final BreakingBlock breakingBlock;
                 final int id = getBlockEntityId(block);
                 if (packet.getPlayerDigTypes().getValues().get(0) == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-                    final PreBlockDamageEvent e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()));
-                    Bukkit.getPluginManager().callEvent(e);
-                    if (e.isCancelled()) {
-                        return;
-                    }
+                    final PreBlockDamageEvent e;
                     if (cachedBlocks.containsKey(id)) {
-                        cachedBlocks.get(id).start();
-                    }
-                    else {
-                        breakingBlock = new BreakingBlock(e);
-                        cachedBlocks.put(id, breakingBlock);
-                        breakingBlock.start();
+                        breakingBlock = cachedBlocks.get(id);
+                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), breakingBlock.getStage(), breakingBlock.getTimeBroken());
+                        Bukkit.getPluginManager().callEvent(e);
+                        if (e.isCancelled()) {
+                            return;
                         }
                     }
+                    else {
+                        e = new PreBlockDamageEvent(block, player, Breaker.getPlugin().database.get(block.getType(), block.getData()), 0, 0);
+                        Bukkit.getPluginManager().callEvent(e);
+                        if (e.isCancelled()) {
+                            return;
+                        }
+                        breakingBlock = new BreakingBlock(e);
+                        cachedBlocks.put(id, breakingBlock);
+                    }
+                    breakingBlock.start();
+                }
                 else {
                     if (cachedBlocks.containsKey(id)) {
                         breakingBlock = cachedBlocks.get(id);

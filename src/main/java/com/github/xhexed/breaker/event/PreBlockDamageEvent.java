@@ -14,11 +14,14 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
     private int stage;
     private boolean cancelled;
     private int breakTime;
+    private int timeBroken;
 
-    public PreBlockDamageEvent(final Block block, final Player player, final int breakTime) {
-        this.block     = block;
-        this.player    = player;
-        this.breakTime = breakTime;
+    public PreBlockDamageEvent(final Block block, final Player player, final int breakTime, final int stage, final int timeBroken) {
+        this.block      = block;
+        this.player     = player;
+        this.breakTime  = breakTime;
+        this.stage      = stage;
+        this.timeBroken = timeBroken;
     }
 
     public Block getBlock() {
@@ -43,6 +46,14 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
 
     public void setBreakTime(final int breakTime) {
         this.breakTime = breakTime;
+    }
+
+    public int getTimeBroken() {
+        return timeBroken;
+    }
+
+    public void setTimeBroken(final int timeBroken) {
+        this.timeBroken = timeBroken;
     }
 
     @Override
