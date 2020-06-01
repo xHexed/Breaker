@@ -54,8 +54,14 @@ class BreakingBlock {
         Bukkit.getPluginManager().callEvent(event);
         task.cancel();
 
-        if (event.getStage() < 10) {
+        if (event.getStage() < 10 && event.getStage() > 0) {
             stage = event.getStage();
+            final PreBlockDamageEvent e = new PreBlockDamageEvent(block, breaker, breakTime, stage, 0, breaker.getInventory().getItemInMainHand());
+            Bukkit.getPluginManager().callEvent(e);
+            if (e.isCancelled()) {
+                return;
+            }
+            update(e);
             start();
         }
 
