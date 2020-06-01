@@ -2,6 +2,7 @@ package com.github.xhexed.breaker;
 
 import com.github.xhexed.breaker.core.BreakingCore;
 import com.github.xhexed.breaker.manager.Database;
+import com.github.xhexed.breaker.utility.NMSHandler;
 import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ public class Breaker extends JavaPlugin {
 
     public void onEnable() {
         plugin = this;
+        Bukkit.getScheduler().runTaskAsynchronously(this, NMSHandler::cacheSound);
         saveDefaultConfig();
         if (!new File(getDataFolder(), "blocks.yml").exists()) {
             saveResource("blocks.yml", false);
