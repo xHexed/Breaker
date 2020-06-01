@@ -3,6 +3,7 @@ package com.github.xhexed.breaker.core;
 import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
+import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -70,7 +71,10 @@ class BreakingBlock {
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
             breakBlock(breaker, block.getLocation());
             final HashMap<String, BreakingBlock> list = Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
-            list.forEach((key, value) -> value.cancel());
+            list.forEach((name, breakingBlock) -> {
+                breakingBlock.cancel();
+                NMSHandler.breakAnimation(0, block, Bukkit.getPlayer(name));
+            });
         }
     }
 
