@@ -22,6 +22,7 @@ class BreakingBlock {
     private int stage;
     private int timeBroken;
     private BukkitRunnable task;
+    private BukkitRunnable cancelTask;
     private int breakTime;
     private ItemStack lastItem;
 
@@ -34,6 +35,10 @@ class BreakingBlock {
     }
 
     void start() {
+        if (cancelTask != null) {
+            cancelTask.cancel();
+            cancelTask = null;
+        }
         task = new BukkitRunnable() {
             public void run() {
                 breakAnimation(timeBroken * 10 / breakTime, block, breaker);
@@ -48,6 +53,13 @@ class BreakingBlock {
 
     void cancel() {
         task.cancel();
+        cancelTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
+            }
+        };
+        cancelTask.runTaskLater(Breaker.getPlugin(), 400);
     }
 
     private void finish() {
