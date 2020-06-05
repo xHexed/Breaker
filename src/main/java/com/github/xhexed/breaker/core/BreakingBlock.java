@@ -85,7 +85,7 @@ class BreakingBlock {
             final HashMap<String, BreakingBlock> list = Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
             list.forEach((name, breakingBlock) -> {
                 breakingBlock.cancel();
-                NMSHandler.breakAnimation(0, block, Bukkit.getPlayer(name));
+                NMSHandler.breakAnimation(10, block, Bukkit.getPlayer(name));
             });
         }
     }
