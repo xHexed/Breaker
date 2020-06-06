@@ -1,6 +1,7 @@
 package com.github.xhexed.breaker.core;
 
 import com.github.xhexed.breaker.Breaker;
+import com.github.xhexed.breaker.event.BlockStageChangeEvent;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
 import com.github.xhexed.breaker.utility.NMSHandler;
@@ -20,6 +21,7 @@ class BreakingBlock {
     private final Block block;
     private final Player breaker;
     private int stage;
+    private int lastStage;
     private int timeBroken;
     private BukkitRunnable task;
     private BukkitRunnable cancelTask;
@@ -41,7 +43,12 @@ class BreakingBlock {
         }
         task = new BukkitRunnable() {
             public void run() {
-                breakAnimation(timeBroken * 10 / breakTime, block, breaker);
+                stage = timeBroken * 10 / breakTime;
+                if (stage != lastStage) {
+                    Bukkit.getPluginManager().callEvent(new BlockStageChangeEvent(block, breaker, stage));
+                }
+                lastStage = stage;
+                breakAnimation(stage, block, breaker);
                 timeBroken++;
                 if (timeBroken > breakTime) {
                     finish();
