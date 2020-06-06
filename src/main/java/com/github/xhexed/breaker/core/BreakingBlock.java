@@ -45,7 +45,7 @@ class BreakingBlock {
             public void run() {
                 stage = timeBroken * 10 / breakTime;
                 if (stage != lastStage) {
-                    Bukkit.getPluginManager().callEvent(new BlockStageChangeEvent(block, breaker, stage));
+                    Bukkit.getPluginManager().callEvent(new BlockStageChangeEvent(block, breaker, stage, timeBroken, breakTime));
                 }
                 lastStage = stage;
                 breakAnimation(stage, block, breaker);

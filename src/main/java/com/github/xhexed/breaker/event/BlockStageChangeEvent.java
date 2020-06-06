@@ -11,11 +11,15 @@ public class BlockStageChangeEvent extends Event {
     private final int stage;
     private final Block block;
     private final Player player;
+    private final int timeBroken;
+    private final int breakTime;
 
-    public BlockStageChangeEvent(final Block block, final Player player, final int stage) {
-        this.block = block;
-        this.player = player;
-        this.stage = stage;
+    public BlockStageChangeEvent(final Block block, final Player player, final int stage, final int timeBroken, final int breakTime) {
+        this.block      = block;
+        this.player     = player;
+        this.stage      = stage;
+        this.timeBroken = timeBroken;
+        this.breakTime  = breakTime;
     }
 
     public Block getBlock() {
@@ -28,6 +32,14 @@ public class BlockStageChangeEvent extends Event {
 
     public int getStage() {
         return stage;
+    }
+
+    public int getTimeBroken() {
+        return timeBroken;
+    }
+
+    public int getBreakTime() {
+        return breakTime;
     }
 
     @Override
