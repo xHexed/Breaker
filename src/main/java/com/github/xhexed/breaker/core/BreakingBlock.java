@@ -1,6 +1,5 @@
 package com.github.xhexed.breaker.core;
 
-import com.github.xhexed.breaker.Breaker;
 import com.github.xhexed.breaker.event.BlockStageChangeEvent;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
@@ -15,6 +14,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 
+import static com.github.xhexed.breaker.Breaker.getPlugin;
+import static com.github.xhexed.breaker.core.BreakingCore.cachedBlocks;
+import static com.github.xhexed.breaker.core.BreakingCore.getBlockEntityId;
 import static com.github.xhexed.breaker.utility.NMSHandler.*;
 
 class BreakingBlock {
@@ -55,7 +57,7 @@ class BreakingBlock {
                 }
             }
         };
-        task.runTaskTimer(Breaker.getPlugin(), 0, 1);
+        task.runTaskTimer(getPlugin(), 0, 1);
     }
 
     void cancel() {
@@ -63,10 +65,10 @@ class BreakingBlock {
         cancelTask = new BukkitRunnable() {
             @Override
             public void run() {
-                Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
+                cachedBlocks.remove(getBlockEntityId(block));
             }
         };
-        cancelTask.runTaskLater(Breaker.getPlugin(), 400);
+        cancelTask.runTaskLater(getPlugin(), 400);
     }
 
     private void finish() {
@@ -88,7 +90,7 @@ class BreakingBlock {
             breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
             breakBlock(breaker, block.getLocation());
-            final HashMap<String, BreakingBlock> list = Breaker.getPlugin().core.cachedBlocks.remove(BreakingCore.getBlockEntityId(block));
+            final HashMap<String, BreakingBlock> list = cachedBlocks.remove(getBlockEntityId(block));
             list.forEach((name, breakingBlock) -> {
                 breakingBlock.cancel();
                 NMSHandler.breakAnimation(10, block, Bukkit.getPlayer(name));

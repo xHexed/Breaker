@@ -22,11 +22,11 @@ import java.util.Map;
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 
 public class BreakingCore {
-    final Map<Integer, HashMap<String, BreakingBlock>> cachedBlocks = new HashMap<>();
+    static final Map<Integer, HashMap<String, BreakingBlock>> cachedBlocks = new HashMap<>();
 
-    @SuppressWarnings("deprecation")
-    public BreakingCore() {
+    public static void init() {
         ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_DIG) {
+            @SuppressWarnings("deprecation")
             public void onPacketReceiving(final PacketEvent event) {
                 final PacketContainer packet = event.getPacket();
                 final Player player = event.getPlayer();

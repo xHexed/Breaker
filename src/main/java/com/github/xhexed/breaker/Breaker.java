@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Breaker extends JavaPlugin {
     private static Breaker plugin;
     public Database database;
-    public BreakingCore core;
 
     public void onEnable() {
         plugin = this;
@@ -21,7 +20,7 @@ public class Breaker extends JavaPlugin {
         getCommand("breaker").setExecutor(new BreakerCommand());
         getCommand("breaker").setTabCompleter(new BreakerCommand());
         database = new Database();
-        core     = new BreakingCore();
+        BreakingCore.init();
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         onReload();
     }
