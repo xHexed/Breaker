@@ -1,6 +1,5 @@
 package com.github.xhexed.breaker;
 
-import com.github.xhexed.breaker.core.BreakingCore;
 import com.github.xhexed.breaker.manager.Database;
 import com.github.xhexed.breaker.utility.NMSHandler;
 import javafx.util.Pair;
@@ -20,7 +19,6 @@ public class Breaker extends JavaPlugin {
         getCommand("breaker").setExecutor(new BreakerCommand());
         getCommand("breaker").setTabCompleter(new BreakerCommand());
         database = new Database();
-        BreakingCore.init();
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         onReload();
     }

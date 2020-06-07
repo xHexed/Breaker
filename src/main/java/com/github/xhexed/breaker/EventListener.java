@@ -1,14 +1,13 @@
 package com.github.xhexed.breaker;
 
+import com.github.xhexed.breaker.manager.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -40,6 +39,11 @@ class EventListener implements Listener {
             return;
         }
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true), 2L);
+    }
+
+    @EventHandler
+    public void onJoin(final PlayerJoinEvent event) {
+        PacketManager.addPlayer(event.getPlayer());
     }
 }
 
