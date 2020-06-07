@@ -93,10 +93,6 @@ public class BreakingCore {
         }).syncStart();
     }
 
-    public boolean contains(final Block block) {
-        return cachedBlocks.containsKey(getBlockEntityId(block));
-    }
-
     public static int getBlockEntityId(final Block block) {
         return (block.getX() & 0xFFF) << 20 | (block.getZ() & 0xFFF) << 8 | block.getY() & 0xFF;
     }

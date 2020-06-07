@@ -11,7 +11,7 @@ public class Database {
     private final Map<Pair<Material, Byte>, Integer> blockConfigs = new HashMap<>();
 
     public void add(final Pair<Material, Byte> mat, final int num) {
-        Breaker.debug("Added " + mat + " to the Database!", 3);
+        Breaker.debug("Added " + mat + " to the Database!");
         blockConfigs.put(mat, num);
     }
 
@@ -20,15 +20,13 @@ public class Database {
     }
 
     public void clear() {
-        Breaker.debug("Cleared Database!", 4);
+        Breaker.debug("Cleared Database!");
         blockConfigs.clear();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean has(final Material material, final byte id) {
-        final boolean contains = blockConfigs.containsKey(new Pair<>(material, id));
-        Breaker.debug("Checking if " + material + "=" + id + " exists in Database... (" + contains + ")", 3);
-        return contains;
+        return blockConfigs.containsKey(new Pair<>(material, id));
     }
 }
 
