@@ -1,7 +1,6 @@
 name: Breaker
 main: com.github.xhexed.breaker.Breaker
 version: ${project.version}
-depend: [ProtocolLib]
 commands:
   breaker:
     usage: /breaker
