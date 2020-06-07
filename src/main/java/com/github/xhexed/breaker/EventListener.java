@@ -1,5 +1,6 @@
 package com.github.xhexed.breaker;
 
+import com.github.xhexed.breaker.manager.Database;
 import com.github.xhexed.breaker.manager.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,7 +30,7 @@ class EventListener implements Listener {
     public static void blockDamage(final BlockDamageEvent e) {
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
         final Block block = e.getBlock();
-        if (!getPlugin().database.has(block.getType(), block.getData()) || !e.getInstaBreak()) return;
+        if (!Database.has(block.getType(), block.getData()) || !e.getInstaBreak()) return;
         e.setCancelled(true);
     }
 

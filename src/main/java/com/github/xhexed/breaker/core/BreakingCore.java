@@ -1,6 +1,7 @@
 package com.github.xhexed.breaker.core;
 
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
+import com.github.xhexed.breaker.manager.Database;
 import net.minecraft.server.v1_11_R1.BlockPosition;
 import net.minecraft.server.v1_11_R1.PacketPlayInBlockDig;
 import org.bukkit.GameMode;
@@ -11,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.xhexed.breaker.Breaker.getPlugin;
 import static org.bukkit.Bukkit.getPluginManager;
 
 public class BreakingCore {
@@ -25,13 +25,13 @@ public class BreakingCore {
             final Block block = player.getWorld().getBlockAt(
                     blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
             if (block.getType() == Material.AIR ||
-                    !getPlugin().database.has(block.getType(), block.getData())
+                    !Database.has(block.getType(), block.getData())
             ) return;
             final BreakingBlock breakingBlock;
             final int id = getBlockEntityId(block);
             if (packet.c() == PacketPlayInBlockDig.EnumPlayerDigType.START_DESTROY_BLOCK) {
                 final PreBlockDamageEvent event;
-                final int breakTime = getPlugin().database.get(block.getType(), block.getData());
+                final int breakTime = Database.get(block.getType(), block.getData());
                 if (cachedBlocks.containsKey(id)) {
                     final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
                     final String name = player.getName();
