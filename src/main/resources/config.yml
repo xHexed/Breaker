@@ -3,6 +3,11 @@
   # WARNING: Will prevent players from breaking blocks that aren't configured by Breaker!
   #permanent-mining-fatigue: false
 
-debug:
-  enabled: false
-  depth: 0
+#The material to modify.
+STONE:
+  #The block break speed (in ticks) if no state is present.
+  hardness: 50
+LOG:
+  hardness: 50
+LOG:1:
+  hardness: 50

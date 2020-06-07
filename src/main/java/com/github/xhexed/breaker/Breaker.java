@@ -6,11 +6,8 @@ import com.github.xhexed.breaker.utility.NMSHandler;
 import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public class Breaker extends JavaPlugin {
     private static Breaker plugin;
@@ -21,9 +18,6 @@ public class Breaker extends JavaPlugin {
         plugin = this;
         Bukkit.getScheduler().runTaskAsynchronously(this, NMSHandler::cacheSound);
         saveDefaultConfig();
-        if (!new File(getDataFolder(), "blocks.yml").exists()) {
-            saveResource("blocks.yml", false);
-        }
         getCommand("breaker").setExecutor(new BreakerCommand());
         getCommand("breaker").setTabCompleter(new BreakerCommand());
         database = new Database();
@@ -35,9 +29,8 @@ public class Breaker extends JavaPlugin {
     void onReload() {
         reloadConfig();
         database.clear();
-        final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "blocks.yml"));
+        final FileConfiguration config = getConfig();
         for (final String entries : config.getKeys(false)) {
-            final ConfigurationSection section = config.getConfigurationSection(entries);
             try {
                 final Material material;
                 final byte id;
@@ -50,7 +43,7 @@ public class Breaker extends JavaPlugin {
                     id = 0;
                 }
                 database.add(new Pair<>(material, id),
-                                    section.getInt("hardness", 1));
+                             config.getConfigurationSection(entries).getInt("hardness", 1));
             }
             catch (final IllegalArgumentException e) {
                 getLogger().warning("Couldn't load block " + entries + "!");
@@ -58,10 +51,8 @@ public class Breaker extends JavaPlugin {
         }
     }
 
-    public static void debug(final String m, final int depth) {
-        if (plugin.getConfig().getBoolean("debug.enabled") && plugin.getConfig().getInt("debug.depth") >= depth) {
-            plugin.getLogger().info("[Debug] " + m);
-        }
+    public static void debug(final String m) {
+        plugin.getLogger().info(m);
     }
 
     public static Breaker getPlugin() {

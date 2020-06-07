@@ -1,8 +1,0 @@
-#The material to modify.
-STONE:
-  #The block break speed (in ticks) if no state is present.
-  hardness: 50
-LOG:
-  hardness: 50
-LOG:1:
-  hardness: 50
