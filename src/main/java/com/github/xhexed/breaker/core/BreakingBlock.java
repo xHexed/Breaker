@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 import static com.github.xhexed.breaker.core.BreakingCore.cachedBlocks;
 import static com.github.xhexed.breaker.core.BreakingCore.getBlockEntityId;
@@ -95,7 +97,9 @@ class BreakingBlock {
                     new MaterialData(block.getType()));
         if (event.isBreakBlock())
             breakBlock(breaker, block.getLocation());
-        cachedBlocks.remove(getBlockEntityId(block)).forEach((name, breakingBlock) -> {
+        final HashMap<String, BreakingBlock> list = cachedBlocks.remove(getBlockEntityId(block));
+        if (list == null) return;
+        list.forEach((name, breakingBlock) -> {
             breakingBlock.cancel();
             NMSHandler.breakAnimation(10, block, Bukkit.getPlayer(name));
         });
