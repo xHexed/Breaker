@@ -87,9 +87,15 @@ class BreakingBlock {
         }
 
         if (!event.isCancelled()) {
-            breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
-            block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.1, 0.1, 0.1, 4.0, new MaterialData(block.getType()));
-            breakBlock(breaker, block.getLocation());
+            if (event.isPlaySound())
+                breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
+            if (event.isSpawnParticle())
+                block.getWorld().spawnParticle(
+                    Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5),
+                    100, 0.1, 0.1, 0.1, 4.0,
+                    new MaterialData(block.getType()));
+            if (event.isBreakBlock())
+                breakBlock(breaker, block.getLocation());
             final HashMap<String, BreakingBlock> list = cachedBlocks.remove(getBlockEntityId(block));
             list.forEach((name, breakingBlock) -> {
                 breakingBlock.cancel();

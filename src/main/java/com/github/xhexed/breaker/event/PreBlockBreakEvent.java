@@ -13,6 +13,9 @@ public class PreBlockBreakEvent extends Event implements Cancellable {
     private final Player player;
     private int stage = 10;
     private boolean cancelled;
+    private boolean breakBlock = true;
+    private boolean playSound = true;
+    private boolean spawnParticle = true;
 
     public PreBlockBreakEvent(final Block block, final Player player) {
         this.block = block;
@@ -33,6 +36,30 @@ public class PreBlockBreakEvent extends Event implements Cancellable {
 
     public void setStage(final int stage) {
         this.stage = stage;
+    }
+
+    public boolean isBreakBlock() {
+        return breakBlock;
+    }
+
+    public void setBreakBlock(final boolean b) {
+        breakBlock = b;
+    }
+
+    public boolean isPlaySound() {
+        return playSound;
+    }
+
+    public void setPlaySound(final boolean b) {
+        playSound = b;
+    }
+
+    public boolean isSpawnParticle() {
+        return spawnParticle;
+    }
+
+    public void setSpawnParticle(final boolean b) {
+        spawnParticle = b;
     }
 
     @Override
