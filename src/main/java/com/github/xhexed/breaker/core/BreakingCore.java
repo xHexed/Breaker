@@ -19,7 +19,7 @@ public class BreakingCore {
 
     @SuppressWarnings("deprecation")
     public static void handlePacket(final Object object, final Player player) {
-        if (object instanceof PacketPlayInBlockDig && !player.getGameMode().equals(GameMode.CREATIVE)) {
+        if (object instanceof PacketPlayInBlockDig && player.getGameMode() != GameMode.CREATIVE) {
             final PacketPlayInBlockDig packet = (PacketPlayInBlockDig) object;
             final BlockPosition blockPosition = packet.a();
             final Block block = player.getWorld().getBlockAt(

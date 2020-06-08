@@ -4,7 +4,6 @@ import com.github.xhexed.breaker.core.BreakingCore;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -14,13 +13,9 @@ public class PacketManager {
         if (channel.pipeline().get("PacketInjector") == null) {
             channel.pipeline().addBefore("packet_handler", "PacketInjector", new ChannelDuplexHandler() {
                 @Override
-                public void write(final ChannelHandlerContext ctx, final Object msg, final ChannelPromise promise) throws Exception {
-                    super.write(ctx, msg, promise);
-                }
-
-                @Override
-                public void channelRead(final ChannelHandlerContext channel, final Object object) {
+                public void channelRead(final ChannelHandlerContext channel, final Object object) throws Exception {
                     BreakingCore.handlePacket(object, player);
+                    super.channelRead(channel, object);
                 }
             });
         }

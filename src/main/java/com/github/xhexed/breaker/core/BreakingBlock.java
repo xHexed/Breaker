@@ -101,7 +101,7 @@ class BreakingBlock {
         if (list == null) return;
         list.forEach((name, breakingBlock) -> {
             breakingBlock.cancel();
-            NMSHandler.breakAnimation(10, block, Bukkit.getPlayer(name));
+            breakAnimation(10, block, Bukkit.getPlayer(name));
         });
     }
 
