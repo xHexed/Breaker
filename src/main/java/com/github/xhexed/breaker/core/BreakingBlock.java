@@ -3,7 +3,6 @@ package com.github.xhexed.breaker.core;
 import com.github.xhexed.breaker.event.BlockStageChangeEvent;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
-import com.github.xhexed.breaker.utility.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
