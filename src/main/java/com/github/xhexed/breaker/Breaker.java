@@ -2,7 +2,6 @@ package com.github.xhexed.breaker;
 
 import com.github.xhexed.breaker.manager.Database;
 import com.github.xhexed.breaker.utility.NMSHandler;
-import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,7 +36,7 @@ public class Breaker extends JavaPlugin {
                     material = Material.valueOf(entries);
                     id = 0;
                 }
-                Database.add(new Pair<>(material, id),
+                Database.add(material, id,
                              config.getConfigurationSection(entries).getInt("hardness", 1));
             }
             catch (final IllegalArgumentException e) {

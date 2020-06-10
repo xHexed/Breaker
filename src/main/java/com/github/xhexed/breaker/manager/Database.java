@@ -1,22 +1,22 @@
 package com.github.xhexed.breaker.manager;
 
 import com.github.xhexed.breaker.Breaker;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bukkit.Material;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Database {
-    private static final Map<Pair<Material, Byte>, Integer> blockConfigs = new HashMap<>();
+    private static final Map<ImmutablePair<Material, Byte>, Integer> blockConfigs = new HashMap<>();
 
-    public static void add(final Pair<Material, Byte> mat, final int num) {
-        Breaker.debug("Added " + mat + " to the Database!");
-        blockConfigs.put(mat, num);
+    public static void add(final Material material, final byte id, final int num) {
+        Breaker.debug("Added " + material + ":" + id + " to the Database!");
+        blockConfigs.put(new ImmutablePair<>(material, id), num);
     }
 
     public static int get(final Material material, final byte id) {
-        return blockConfigs.get(new Pair<>(material, id));
+        return blockConfigs.get(new ImmutablePair<>(material, id));
     }
 
     public static void clear() {
@@ -26,7 +26,7 @@ public class Database {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean has(final Material material, final byte id) {
-        return blockConfigs.containsKey(new Pair<>(material, id));
+        return blockConfigs.containsKey(new ImmutablePair<>(material, id));
     }
 }
 
