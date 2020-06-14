@@ -2,17 +2,19 @@ package com.github.xhexed.breaker.event;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @SuppressWarnings("unused")
-public class BlockStageChangeEvent extends Event {
+public class BlockStageChangeEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final int stage;
     private final Block block;
     private final Player player;
     private final int timeBroken;
     private final int breakTime;
+    private boolean cancelled;
 
     public BlockStageChangeEvent(final Block block, final Player player, final int stage, final int timeBroken, final int breakTime) {
         this.block      = block;
@@ -49,5 +51,15 @@ public class BlockStageChangeEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(final boolean b) {
+        cancelled = b;
     }
 }
