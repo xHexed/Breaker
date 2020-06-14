@@ -37,7 +37,7 @@ public class BreakingCore {
                     final String name = player.getName();
                     if (list.containsKey(name)) {
                         breakingBlock = list.get(name);
-                        event             = new PreBlockDamageEvent(block, player, breakTime, breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
+                        event = new PreBlockDamageEvent(block, player, breakTime, breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
                         getPluginManager().callEvent(event);
                         if (event.isCancelled()) {
                             return;

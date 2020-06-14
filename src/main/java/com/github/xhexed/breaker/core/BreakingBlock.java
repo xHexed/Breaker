@@ -32,9 +32,8 @@ class BreakingBlock {
     BreakingBlock(final PreBlockDamageEvent event) {
         block  = event.getBlock();
         breaker = event.getPlayer();
-        stage = event.getStage();
         breakTime = event.getBreakTime();
-        timeBroken = stage * breakTime / 10;
+        timeBroken = event.getTimeBroken();
     }
 
     void start() {
@@ -109,7 +108,6 @@ class BreakingBlock {
     }
 
     void update(final PreBlockDamageEvent event) {
-        stage = event.getStage();
         timeBroken = event.getTimeBroken();
         breakTime = event.getBreakTime();
         lastItem = event.getLastItem();

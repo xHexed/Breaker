@@ -12,7 +12,7 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Block block;
     private final Player player;
-    private int stage;
+    private final int stage;
     private boolean cancelled;
     private int breakTime;
     private int timeBroken;
@@ -37,10 +37,6 @@ public class PreBlockDamageEvent extends Event implements Cancellable {
 
     public int getStage() {
         return stage;
-    }
-
-    public void setStage(final int stage) {
-        this.stage = stage;
     }
 
     public int getBreakTime() {
