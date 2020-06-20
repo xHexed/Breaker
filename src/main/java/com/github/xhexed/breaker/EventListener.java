@@ -15,9 +15,11 @@ import org.bukkit.potion.PotionEffectType;
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 
 class EventListener implements Listener {
+
     @EventHandler
     public static void playerJoin(final PlayerJoinEvent e) {
         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
+        PacketManager.addPlayer(e.getPlayer());
     }
 
     @EventHandler
@@ -40,11 +42,6 @@ class EventListener implements Listener {
             return;
         }
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true), 2L);
-    }
-
-    @EventHandler
-    public void onJoin(final PlayerJoinEvent event) {
-        PacketManager.addPlayer(event.getPlayer());
     }
 }
 
