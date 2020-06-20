@@ -15,22 +15,23 @@ import org.bukkit.potion.PotionEffectType;
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 
 class EventListener implements Listener {
+    private static final PotionEffect SLOWDIGGING_EFFECT = new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false);
 
     @EventHandler
     public static void playerJoin(final PlayerJoinEvent e) {
-        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
+        e.getPlayer().addPotionEffect(SLOWDIGGING_EFFECT, true);
         PacketManager.addPlayer(e.getPlayer());
     }
 
     @EventHandler
     public static void playerRespawn(final PlayerRespawnEvent e) {
-        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
+        e.getPlayer().addPotionEffect(SLOWDIGGING_EFFECT, true);
     }
 
     @SuppressWarnings("deprecation")
     @EventHandler
     public static void blockDamage(final BlockDamageEvent e) {
-        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true);
+        e.getPlayer().addPotionEffect(SLOWDIGGING_EFFECT, true);
         final Block block = e.getBlock();
         if (!Database.has(block.getType(), block.getData()) || !e.getInstaBreak()) return;
         e.setCancelled(true);
@@ -41,7 +42,7 @@ class EventListener implements Listener {
         if (e.getItem().getType() != Material.MILK_BUCKET) {
             return;
         }
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, -1, false, false), true), 2L);
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> e.getPlayer().addPotionEffect(SLOWDIGGING_EFFECT, true), 2L);
     }
 }
 
