@@ -10,14 +10,16 @@ import org.bukkit.entity.Player;
 public class PacketManager {
     public static void addPlayer(final Player player) {
         final Channel channel = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel;
-        if (channel.pipeline().get("PacketInjector") == null) {
-            channel.pipeline().addBefore("packet_handler", "PacketInjector", new ChannelDuplexHandler() {
-                @Override
-                public void channelRead(final ChannelHandlerContext channel, final Object object) throws Exception {
-                    BreakingCore.handlePacket(object, player);
-                    super.channelRead(channel, object);
-                }
-            });
-        }
+        channel.eventLoop().submit(() -> {
+            if (channel.pipeline().get("PacketInjector") == null) {
+                channel.pipeline().addBefore("packet_handler", "PacketInjector", new ChannelDuplexHandler() {
+                    @Override
+                    public void channelRead(final ChannelHandlerContext channel, final Object object) throws Exception {
+                        BreakingCore.handlePacket(object, player);
+                        super.channelRead(channel, object);
+                    }
+                });
+            }
+        });
     }
 }
