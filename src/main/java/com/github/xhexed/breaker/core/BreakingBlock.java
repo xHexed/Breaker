@@ -39,10 +39,6 @@ class BreakingBlock {
     }
 
     void start() {
-        if (cancelTask != null) {
-            cancelTask.cancel();
-            cancelTask = null;
-        }
         task = new BukkitRunnable() {
             public void run() {
                 stage = timeBroken * 10 / breakTime;
@@ -62,10 +58,19 @@ class BreakingBlock {
             }
         };
         task.runTaskTimer(getPlugin(), 0, 1);
+
+        if (cancelTask != null) {
+            cancelTask.cancel();
+            cancelTask = null;
+        }
     }
 
     void cancel() {
-        task.cancel();
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
+
         cancelTask = new BukkitRunnable() {
             @Override
             public void run() {
