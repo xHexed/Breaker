@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.bukkit.Bukkit.getPluginManager;
 
 public class BreakingCore {
-    static final Map<Integer, HashMap<String, BreakingBlock>> cachedBlocks = new HashMap<>();
+    static final Map<Long, HashMap<String, BreakingBlock>> cachedBlocks = new HashMap<>();
 
     @SuppressWarnings("deprecation")
     public static void handlePacket(final Object object, final Player player) {
@@ -24,17 +24,22 @@ public class BreakingCore {
             final BlockPosition blockPosition = packet.a();
             final Block block = player.getWorld().getBlockAt(
                     blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+
             if (block.getType() == Material.AIR ||
                     !Database.has(block.getType(), block.getData())
             ) return;
+
             final BreakingBlock breakingBlock;
-            final int id = getBlockEntityId(block);
+            final long id = blockPosition.asLong();
+
             if (packet.c() == PacketPlayInBlockDig.EnumPlayerDigType.START_DESTROY_BLOCK) {
                 final PreBlockDamageEvent event;
                 final int breakTime = Database.get(block.getType(), block.getData());
+
                 if (cachedBlocks.containsKey(id)) {
                     final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
                     final String name = player.getName();
+
                     if (list.containsKey(name)) {
                         breakingBlock = list.get(name);
                         event = new PreBlockDamageEvent(block, player, breakTime, breakingBlock.getStage(), breakingBlock.getTimeBroken(), breakingBlock.getLastItem());
@@ -67,22 +72,15 @@ public class BreakingCore {
                 }
                 breakingBlock.start();
             }
-            else {
-                if (cachedBlocks.containsKey(id)) {
-                    final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
-                    final String name = player.getName();
-                    if (list.containsKey(name)) {
-                        breakingBlock = list.get(name);
-                        breakingBlock.cancel();
-                    }
+            else if (cachedBlocks.containsKey(id)) {
+                final HashMap<String, BreakingBlock> list = cachedBlocks.get(id);
+                final String name = player.getName();
+                if (list.containsKey(name)) {
+                    breakingBlock = list.get(name);
+                    breakingBlock.cancel();
                 }
             }
         }
     }
-
-    public static int getBlockEntityId(final Block block) {
-        return (block.getX() & 0xFFF) << 20 | (block.getZ() & 0xFFF) << 8 | block.getY() & 0xFF;
-    }
-
 }
 

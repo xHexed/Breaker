@@ -3,6 +3,7 @@ package com.github.xhexed.breaker.core;
 import com.github.xhexed.breaker.event.BlockStageChangeEvent;
 import com.github.xhexed.breaker.event.PreBlockBreakEvent;
 import com.github.xhexed.breaker.event.PreBlockDamageEvent;
+import net.minecraft.server.v1_11_R1.BlockPosition;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -15,10 +16,10 @@ import java.util.HashMap;
 
 import static com.github.xhexed.breaker.Breaker.getPlugin;
 import static com.github.xhexed.breaker.core.BreakingCore.cachedBlocks;
-import static com.github.xhexed.breaker.core.BreakingCore.getBlockEntityId;
 import static com.github.xhexed.breaker.utility.NMSHandler.*;
 
 class BreakingBlock {
+    private final BlockPosition blockPosition;
     private final Block block;
     private final Player breaker;
     private int stage;
@@ -31,6 +32,7 @@ class BreakingBlock {
 
     BreakingBlock(final PreBlockDamageEvent event) {
         block  = event.getBlock();
+        blockPosition = new BlockPosition(block.getX(), block.getY(), block.getZ());
         breaker = event.getPlayer();
         breakTime = event.getBreakTime();
         timeBroken = event.getTimeBroken();
@@ -67,7 +69,7 @@ class BreakingBlock {
         cancelTask = new BukkitRunnable() {
             @Override
             public void run() {
-                cachedBlocks.remove(getBlockEntityId(block));
+                cachedBlocks.remove(blockPosition.asLong());
             }
         };
         cancelTask.runTaskLater(getPlugin(), 400);
@@ -93,13 +95,16 @@ class BreakingBlock {
 
         if (event.isPlaySound())
             breaker.playSound(block.getLocation(), getBlockBreakSound(block), 1.0f, 1.0f);
+
         if (event.isSpawnParticle())
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5),
                     100, 0.1, 0.1, 0.1, 4.0,
                     new MaterialData(block.getType()));
+
         if (event.isBreakBlock())
             breakBlock(breaker, block.getLocation());
-        final HashMap<String, BreakingBlock> list = cachedBlocks.remove(getBlockEntityId(block));
+
+        final HashMap<String, BreakingBlock> list = cachedBlocks.remove(blockPosition.asLong());
         if (list == null) return;
         list.forEach((name, breakingBlock) -> {
             breakingBlock.cancel();
