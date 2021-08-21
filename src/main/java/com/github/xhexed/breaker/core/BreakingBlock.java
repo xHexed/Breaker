@@ -57,7 +57,7 @@ class BreakingBlock {
                 }
             }
         };
-        task.runTaskTimer(getPlugin(), 0, 1);
+        task.runTaskTimerAsynchronously(getPlugin(), 0, 1);
 
         if (cancelTask != null) {
             cancelTask.cancel();
